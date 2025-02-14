@@ -1,11 +1,17 @@
+"use client"
+
 import Image from "next/image"
 import { NavBar } from "@/components/nav-bar"
 import { RecipeCard } from "@/components/recipe-card"
 import { Button } from "@/components/ui/button"
 import { Cookie } from "lucide-react"
 import homeGirlImage from "@/assets/home_girl_image.png"
+import { useRouter } from "next/navigation"
 
 export default function Home() {
+
+  const router = useRouter()
+
   return (
     <main className="min-h-screen bg-white">
       <NavBar />
@@ -29,7 +35,8 @@ export default function Home() {
                 you'll love!
               </p>
 
-              <Button size="lg" className="bg-[#42B5E7] text-white hover:bg-[#3AA1D1] rounded-full px-8">
+              <Button size="lg" className="bg-[#42B5E7] text-white hover:bg-[#3AA1D1] rounded-full px-8"
+              onClick={() => router.push("/signup")}>
                 SIGN UP
               </Button>
             </div>
