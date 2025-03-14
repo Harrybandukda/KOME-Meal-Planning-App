@@ -91,17 +91,18 @@ export default function Dashboard() {
 
     // For demo purposes, we'll use mock data
     // In a real app, you would fetch this from your database
-    const mockDateKey = Object.keys(mockUser.mealPlans)[0]
-    setSelectedMeals(mockUser.mealPlans[mockDateKey])
+    const mockDateKey = Object.keys(mockUser.mealPlans)[0] as keyof typeof mockUser.mealPlans;
+    setSelectedMeals(mockUser.mealPlans[mockDateKey]);
   }, [])
 
   const handleDateSelect = (formattedDate: string) => {
-    setSelectedDate(formattedDate)
+    setSelectedDate(formattedDate);
 
     // In a real app, you would fetch meals for this date from your database
     // For demo, we'll use mock data if available, or null if not
-    const meals = mockUser.mealPlans[formattedDate] || null
-    setSelectedMeals(meals)
+    const key = formattedDate as keyof typeof mockUser.mealPlans;
+    const meals = mockUser.mealPlans[key] || null;
+    setSelectedMeals(meals);
   }
 
   return (
