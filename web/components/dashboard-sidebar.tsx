@@ -46,8 +46,12 @@ export function DashboardSidebar() {
   return (
     <aside className="fixed left-0 top-0 h-full w-64 bg-white border-r border-gray-200 p-6 overflow-y-auto">
       <div className="flex items-center gap-2 mb-12">
-        <Image src="/assets/logo.png" alt="Kome Logo" width={40} height={40} className="w-10 h-10" />
-        <span className="font-bold text-xl">KOME</span>
+        <Link href="/">
+          <div className="flex items-center gap-2 cursor-pointer">
+            <Image src="/assets/logo.png" alt="Kome Logo" width={40} height={40} className="w-10 h-10" />
+            <span className="font-bold text-xl">KOME</span>
+          </div>
+        </Link>
       </div>
 
       <nav className="space-y-1">
