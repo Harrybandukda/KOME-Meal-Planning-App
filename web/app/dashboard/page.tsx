@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useContext } from "react"
 import { DashboardSidebar } from "@/components/dashboard-sidebar"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -8,55 +8,8 @@ import { Search, Bell, Globe, Heart } from "lucide-react"
 import Image from "next/image"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-
-// Mock data - replace with database data
-const mockUser = {
-  name: "Sarah John",
-  hasMealPlan: true,
-  mealPlans: {
-    // Keys are date strings in YYYY-MM-DD format
-    "2025-03-10": {
-      breakfast: {
-        title: "Greek Yogurt Bowl",
-        image: "/placeholder.svg?height=300&width=400",
-        calories: 320,
-        protein: 15,
-      },
-      lunch: {
-        title: "Quinoa Salad",
-        image: "/placeholder.svg?height=300&width=400",
-        calories: 450,
-        protein: 12,
-      },
-      dinner: {
-        title: "Grilled Salmon",
-        image: "/placeholder.svg?height=300&width=400",
-        calories: 520,
-        protein: 32,
-      },
-    },
-    "2025-03-11": {
-      breakfast: {
-        title: "Avocado Toast",
-        image: "/placeholder.svg?height=300&width=400",
-        calories: 380,
-        protein: 10,
-      },
-      lunch: {
-        title: "Chicken Caesar Salad",
-        image: "/placeholder.svg?height=300&width=400",
-        calories: 420,
-        protein: 28,
-      },
-      dinner: {
-        title: "Vegetable Stir Fry",
-        image: "/placeholder.svg?height=300&width=400",
-        calories: 380,
-        protein: 18,
-      },
-    },
-  },
-}
+import { AppContext } from "../app-provider"
+import { buildURL } from "@/lib/utils"
 
 // Helper function to format date as YYYY-MM-DD
 const formatDate = (date: Date): string => {
@@ -73,6 +26,7 @@ export default function Dashboard() {
   const [dates, setDates] = useState<Array<{ date: Date; formatted: string; dayName: string }>>([])
   const [selectedDate, setSelectedDate] = useState<string>("")
   const [selectedMeals, setSelectedMeals] = useState<any>(null)
+  const { userId, userName } = useContext(AppContext);
 
   useEffect(() => {
     const today = new Date()
@@ -87,23 +41,36 @@ export default function Dashboard() {
     })
 
     setDates(dateArray)
-    setSelectedDate(dateArray[0].formatted)
-
-    // For demo purposes, we'll use mock data
-    // In a real app, you would fetch this from your database
-    const mockDateKey = Object.keys(mockUser.mealPlans)[0] as keyof typeof mockUser.mealPlans;
-    setSelectedMeals(mockUser.mealPlans[mockDateKey]);
-  }, [])
+    handleDateSelect(dateArray[0].formatted);
+  }, [userId]);
 
   const handleDateSelect = (formattedDate: string) => {
     setSelectedDate(formattedDate);
 
-    // In a real app, you would fetch meals for this date from your database
-    // For demo, we'll use mock data if available, or null if not
-    const key = formattedDate as keyof typeof mockUser.mealPlans;
-    const meals = mockUser.mealPlans[key] || null;
-    setSelectedMeals(meals);
+    console.log("Dashboard loading meal plans");
+    fetch(buildURL("/api/meal_plan/user/" + userId))
+      .then((response) => response.json())
+      .then((meals) => {
+        console.log("User meal plans response");
+        console.log(meals);
+        setSelectedMeals(meals);
+      });
   }
+
+  const createMealPlan = (date: string) => {
+    console.log("Creating meal plan for: ", date);
+    fetch(buildURL("/api/meal_plan/create/" + userId), {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      }
+    })
+    .then((response) => response.json())
+    .then((data) => {
+      console.log("Meal plan created: ", data);
+    })
+    .catch((error) => console.error("Error creating meal plan: ", error));
+  };
 
   return (
     <div className="min-h-screen bg-white font-quicksand">
@@ -146,7 +113,7 @@ export default function Dashboard() {
                       <AvatarImage src="/placeholder.svg" />
                       <AvatarFallback>SJ</AvatarFallback>
                     </Avatar>
-                    <span className="font-medium">{mockUser.name}</span>
+                    <span className="font-medium">{userName}</span>
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
@@ -218,7 +185,7 @@ export default function Dashboard() {
               <div className="text-center py-12 bg-gray-50 rounded-xl border border-gray-100">
                 <h3 className="text-xl font-semibold mb-4">No Meal Plan for {selectedDate}</h3>
                 <p className="text-gray-600 mb-6">Create a meal plan for this day to get started</p>
-                <Button className="bg-[#42B5E7] hover:bg-[#3AA1D1]">Create Meal Plan</Button>
+                <Button className="bg-[#42B5E7] hover:bg-[#3AA1D1]" onClick={() => createMealPlan(selectedDate)}>Create Meal Plan</Button>
               </div>
             )}
           </div>

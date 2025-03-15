@@ -1,15 +1,17 @@
 'use client'
  
-import { createContext, useState } from 'react'
+import { createContext, useEffect, useState } from 'react'
 
 export type AppContextType = {
   userId: string,
   setUserId: Function,
+  userName: string,
 }
 
 export const AppContext = createContext<AppContextType>({
   userId: "",
   setUserId: () => {},
+  userName: "",
 })
  
 export function AppProvider({
@@ -18,6 +20,17 @@ export function AppProvider({
   children: React.ReactNode
 }) {
   const [userId, setUserId] = useState<string>("");
+  const [userName, setUserName] = useState<string>("");
 
-  return <AppContext.Provider value={{userId, setUserId}}>{children}</AppContext.Provider>
+  useEffect(() => {
+    if (userId) {
+      fetch("/api/user/" + userId)
+        .then((response) => response.json())
+        .then((data) => {
+          setUserName(data.full_name);
+        });
+    }
+  }, [userId]);
+
+  return <AppContext.Provider value={{userId, setUserId, userName}}>{children}</AppContext.Provider>
 }
