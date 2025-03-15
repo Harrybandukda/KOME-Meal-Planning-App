@@ -22,11 +22,21 @@ router.get('/:id', async (req, res) => {
     }
 })
 
+// Get all plans for specific user
+router.get('/user/:id', async (req, res) => {
+    try {
+        const plans = await mealPlanController.getUserPlans(req.params.id);
+        res.status(200).send(plans);
+    } catch(err) {
+        res.status(500).json({ message: err.message });
+    }
+})
+
 router.post('/create/:userId', async (req, res) => {
     try {
-        await mealPlanController.generateMealPlan(req.params.userId);
+        const plan = await mealPlanController.generateMealPlan(req.params.userId);
 
-        res.status(201).json({message: "Sucessfully created new meal plan."})
+        res.status(201).send(plan);
     } catch(err) {
         res.status(500).json({ message: err.message });
     }

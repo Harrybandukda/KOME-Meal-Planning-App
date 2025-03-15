@@ -21,6 +21,20 @@ const mealPlanController = {
             throw new Error("Error getting meal plan: ", err.message)
         }
     },
+    getUserPlans: async (userId) => {
+        try {
+            const user = await models.User.findByPk(userId);
+
+            if (!user) {
+                throw Error("Requires a valid user");
+            }
+
+            return await user.getMealPlans();
+        } catch (err) {
+            console.log("Error getting user meal plans: ", err.message);
+            throw new Error("Error getting user meal plans: ", err.message);
+        }
+    },
     generateMealPlan: async (userId) => {
         try {
             // get all allergies 
@@ -43,11 +57,14 @@ const mealPlanController = {
             mealPlan.breakfast = getRandomElement(validRecipes).id;
             mealPlan.lunch = getRandomElement(validRecipes).id;
             mealPlan.dinner = getRandomElement(validRecipes).id;
+            mealPlan.UserId = user.id;
 
             user.addMealPlan(mealPlan);
 
             // save meal plan
             await mealPlan.save();
+
+            return mealPlan;
         } catch (err) {
             console.log("Error while generating meal plan: ", err.message)
             throw new Error("Error while generating meal plan: ", err.message)
