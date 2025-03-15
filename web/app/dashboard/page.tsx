@@ -44,20 +44,55 @@ export default function Dashboard() {
     handleDateSelect(dateArray[0].formatted);
   }, [userId]);
 
-  const handleDateSelect = (formattedDate: string) => {
+  const handleDateSelect = async (formattedDate: string) => {
     setSelectedDate(formattedDate);
 
     console.log("Dashboard loading meal plans");
-    fetch(buildURL("/api/meal_plan/user/" + userId))
-      .then((response) => response.json())
-      .then((meals) => {
-        console.log("User meal plans response");
-        console.log(meals);
-        setSelectedMeals(meals);
-      });
+
+    const response = await fetch(buildURL("/api/meal_plan/user/" + userId));
+    const meals = await response.json();
+
+    console.log("User meal plans response");
+    console.log(meals);
+
+    if (meals && meals.length > 0) {
+      const meal = await mapMealPlan(meals[0]);
+      console.log("Selected meal plan: ", meal);
+      setSelectedMeals(meal);
+    }
   }
 
-  const createMealPlan = (date: string) => {
+  const loadMealRecipe = async (recipeId: string) => {
+    console.log("Loading recipe for: ", recipeId);
+
+    const response = await fetch(buildURL("/api/recipe/" + recipeId));
+    if (response.status !== 200) {
+      console.error("Error loading recipe: ", response.statusText);
+      return {};
+    }
+
+    const data = await response.json();
+    console.log(`Loaded recipe: ${recipeId}`, data);
+
+    return {
+      title: data.name,
+      image: data.link,
+      calories: 320,
+      protein: 15,
+    };
+  };
+
+  const mapMealPlan = async (mealPlan: any) => {
+    const meal = {
+      breakfast: await loadMealRecipe(mealPlan.breakfast),
+      lunch: await loadMealRecipe(mealPlan.lunch),
+      dinner: await loadMealRecipe(mealPlan.dinner),
+    }
+
+    return meal;
+  }
+
+  const createMealPlan = async (date: string) => {
     console.log("Creating meal plan for: ", date);
     fetch(buildURL("/api/meal_plan/create/" + userId), {
       method: "POST",
@@ -67,7 +102,10 @@ export default function Dashboard() {
     })
     .then((response) => response.json())
     .then((data) => {
-      console.log("Meal plan created: ", data);
+      console.log("Meal plan created for the day: ", data);
+
+      const meal = mapMealPlan(data);
+      setSelectedMeals(meal);
     })
     .catch((error) => console.error("Error creating meal plan: ", error));
   };

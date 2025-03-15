@@ -5,7 +5,9 @@ const recipeController = {
         return await models.Recipe.findAll();
     },
     getRecipe: async (id) => {
-        return await models.Recipe.findOne({id});
+        console.log("ADASDASDAD");
+        console.log(id);
+        return await models.Recipe.findByPk(id);
     },
     getUserRecipes: async (userId) => {
         const user = await models.User.findOne({
@@ -15,8 +17,8 @@ const recipeController = {
         return user.Recipes;
     },
     addRecipeToUser: async (userId, recipeId) => {
-        const user = await models.User.findOne({userId});
-        const recipe = await models.Recipe.findOne({recipeId});
+        const user = await models.User.findByPk(userId);
+        const recipe = await models.Recipe.findByPk(recipeId);
         return await user.addRecipe(recipe);
     },
     createRecipe: async (name, description, instructions, ingredients, categories) => { // Create Recipe 
