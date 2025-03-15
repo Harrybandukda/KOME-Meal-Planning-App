@@ -16,9 +16,9 @@ router.post('/signup', async (req, res) => {
 
 router.post('/login', async (req, res) => {
     try {
-        const { username, password } = req.body;
+        const { email, password } = req.body;
 
-        const user = await userController.loginUser(username, password);
+        const user = await userController.loginUser(email, password);
 
         res.status(200).json({ message: "Login successful.", id: user.id });
     } catch (err) {
