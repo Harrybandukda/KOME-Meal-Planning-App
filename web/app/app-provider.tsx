@@ -7,12 +7,14 @@ export type AppContextType = {
   userId: string | null,
   setUserId: Function,
   userName: string,
+  isLoading: boolean,
 }
 
 export const AppContext = createContext<AppContextType>({
   userId: null,
   setUserId: () => {},
   userName: "",
+  isLoading: true,
 })
  
 export function AppProvider({
@@ -20,6 +22,7 @@ export function AppProvider({
 }: {
   children: React.ReactNode
 }) {
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   const [userId, setUserId] = useState<string | null>(null);
   const [userName, setUserName] = useState<string>("");
 
@@ -28,6 +31,7 @@ export function AppProvider({
     if (userId) {
       setUserId(userId);
     }
+    setIsLoading(false);
   }, []);
 
   useEffect(() => {
@@ -48,5 +52,5 @@ export function AppProvider({
     }
   }, [userId]);
 
-  return <AppContext.Provider value={{userId, setUserId, userName}}>{children}</AppContext.Provider>
+  return <AppContext.Provider value={{userId, setUserId, userName, isLoading}}>{children}</AppContext.Provider>
 }

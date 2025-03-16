@@ -14,7 +14,7 @@ import { useRouter } from "next/navigation"
 
 export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
-  const { userId, setUserId } = useContext(AppContext);
+  const { setUserId } = useContext(AppContext);
   const router = useRouter();
 
   useEffect(() => {

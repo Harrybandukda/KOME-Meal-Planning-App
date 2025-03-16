@@ -1,11 +1,13 @@
 "use client"
 
-import { useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import { DashboardSidebar } from "@/components/dashboard-sidebar"
 import { Button } from "@/components/ui/button"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import Image from "next/image"
 import { Plus, RotateCcw, ArrowRight } from 'lucide-react'
+import { useRouter } from "next/navigation"
+import { AppContext } from "../app-provider"
 
 // Mock data structure ready for database integration
 const mockWeeks = [
@@ -134,6 +136,18 @@ export default function MealPlanner() {
   const [activeWeek, setActiveWeek] = useState(1)
   const [activeDay, setActiveDay] = useState("Wednesday")
   const [selectedMeal, setSelectedMeal] = useState("breakfast")
+
+  const { isLoading, userId, userName } = useContext(AppContext);
+  const router = useRouter();
+
+  useEffect(() => {
+    // Authentication check
+    if (!userId && !isLoading) {
+      console.error("User ID not found, redirect to login");
+      router.push("/login");
+      return;
+    }
+  }, [userId, isLoading]);
 
   return (
     <div className="min-h-screen bg-white font-sans">

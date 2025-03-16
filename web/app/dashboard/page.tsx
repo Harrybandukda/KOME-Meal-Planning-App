@@ -10,6 +10,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { AppContext } from "../app-provider"
 import { buildURL } from "@/lib/utils"
+import { useRouter } from "next/navigation"
 
 // Helper function to format date as YYYY-MM-DD
 const formatDate = (date: Date): string => {
@@ -26,11 +27,16 @@ export default function Dashboard() {
   const [dates, setDates] = useState<Array<{ index: number, date: Date; formatted: string; dayName: string }>>([])
   const [selectedDate, setSelectedDate] = useState<string>("")
   const [selectedMeals, setSelectedMeals] = useState<any>(null)
-  const { userId, userName } = useContext(AppContext);
+  const { isLoading, userId, userName } = useContext(AppContext);
+  const router = useRouter();
 
   useEffect(() => {
     if (!userId) {
-      console.error("User ID not found, redirect to login");
+      // Authentication check
+      if (!isLoading) {
+        console.error("User ID not found, redirect to login");
+        router.push("/login");
+      }
       return;
     }
 
@@ -47,7 +53,7 @@ export default function Dashboard() {
     });
 
     setDates(dateArray);
-  }, [userId]);
+  }, [userId, isLoading]);
 
   useEffect(() => {
     if (!dates || dates.length === 0) {
