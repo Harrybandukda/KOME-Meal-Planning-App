@@ -9,7 +9,9 @@ router.post('/signup', async (req, res) => {
 		
         const newUser = await userController.createUser(email, password, full_name);
 
-        res.status(201).json({ message: "User created successfully.", id: newUser.id });
+        const session = await sessionController.createSession(newUser.id);
+
+        res.status(201).json({ message: "User created successfully.", id: newUser.id, token: session.identifier });
     } catch (err) {
         res.status(500).json({ message: err.message });
     }

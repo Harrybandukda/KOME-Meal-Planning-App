@@ -15,7 +15,7 @@ export function buildURL(route: string) {
   return getServerURL() + route;
 }
 
-export function sendRequest<T>(url: string, method: string = 'GET', body: any): Promise<T> {
+export function sendRequest<T>(url: string, method: string = 'GET', body: any = {}): Promise<T> {
   const options: RequestInit = {
     method: "GET",
     headers: {
@@ -35,5 +35,8 @@ export function sendRequest<T>(url: string, method: string = 'GET', body: any): 
         throw new Error("Request failed");
       }
       return response.json();
+    })
+    .catch((error) => {
+      console.error("Error during request: ", error);
     });
 }

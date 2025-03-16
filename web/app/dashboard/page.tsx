@@ -9,7 +9,7 @@ import Image from "next/image"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { AppContext } from "../app-provider"
-import { buildURL } from "@/lib/utils"
+import { sendRequest } from "@/lib/utils"
 import { useRouter } from "next/navigation"
 
 // Helper function to format date as YYYY-MM-DD
@@ -70,8 +70,7 @@ export default function Dashboard() {
 
     console.log("Dashboard loading meal plans");
 
-    const response = await fetch(buildURL("/api/meal_plan/user/" + userId));
-    const meals = await response.json();
+    const meals = await sendRequest<[]>(`/api/meal_plan/user/${userId}`);
 
     console.log("User meal plans response");
     console.log(meals);
@@ -92,13 +91,7 @@ export default function Dashboard() {
   const loadMealRecipe = async (recipeId: string) => {
     console.log("Loading recipe for: ", recipeId);
 
-    const response = await fetch(buildURL("/api/recipe/" + recipeId));
-    if (response.status !== 200) {
-      console.error("Error loading recipe: ", response.statusText);
-      return {};
-    }
-
-    const data = await response.json();
+    const data = await sendRequest<any>(`/api/recipe/${recipeId}`);
     console.log(`Loaded recipe: ${recipeId}`, data);
 
     return {
@@ -130,21 +123,7 @@ export default function Dashboard() {
 
     const weekday = date.index;
 
-    const response = await fetch(buildURL("/api/meal_plan/create"), {
-      method: "POST",
-      headers: {
-        "Authorization": `Bearer ${localStorage.getItem("token")}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ userId, weekday }),
-    });
-
-    if (response.status !== 200) {
-      console.error("Error creating meal plan: ", response.statusText);
-      return;
-    }
-
-    const data = await response.json();
+    const data = await sendRequest<any>("/api/meal_plan/create", "POST", { userId, weekday });
     console.log("Meal plan created for the day: ", data);
 
     const meal = await mapMealPlan(data);

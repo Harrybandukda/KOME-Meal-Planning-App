@@ -6,13 +6,15 @@ import { NavBar } from "@/components/nav-bar"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { EyeIcon, EyeOffIcon } from "lucide-react"
-import { useState } from "react"
+import { useContext, useState } from "react"
 import { useRouter } from "next/navigation"
-import { buildURL } from "@/lib/utils"
+import { sendRequest } from "@/lib/utils"
+import { AppContext } from "../app-provider"
 
 export default function SignUpPage() {
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false)
+  const { setUserId } = useContext(AppContext);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -28,20 +30,13 @@ export default function SignUpPage() {
     const email = target.email.value;
     const password = target.password.value;
 
-    fetch(buildURL("/api/user/signup"), {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ email, password, full_name }),
-    })
-    .then((response) => response.json())
-    .then((data) => {
-      console.log(data);
-      router.push("/onboarding");
-    })
-    .catch((error) => console.error("Error during signup: ", error));
+    sendRequest(`/api/user/signup`, "POST", { email, password, full_name })
+      .then((data: any) => {
 
+        setUserId(data.id);
+        localStorage.setItem("token", data.token);
+        router.push("/onboarding");
+      });
   }
 
   return (

@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input"
 import { EyeIcon, EyeOffIcon } from "lucide-react"
 import { useState, useEffect, useContext } from "react"
 import ErrorBoundary from "@/components/error-boundary"
-import { buildURL } from "@/lib/utils"
+import { sendRequest } from "@/lib/utils"
 import { AppContext } from "../app-provider"
 import { useRouter } from "next/navigation"
 
@@ -34,27 +34,12 @@ export default function LoginPage() {
     const email = target.email.value;
     const password = target.password.value;
 
-    fetch(buildURL("/api/user/login"), {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ email, password }),
-    })
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error("Login failed")
-      }
-      return response.json();
-    })
-    .then((data) => {
-      console.log("Login successful");
-
+    sendRequest(`/api/user/login`, "POST", { email, password })
+    .then((data: any) => {
       setUserId(data.id);
       localStorage.setItem("token", data.token);
       router.push("/dashboard");
-    })
-    .catch((error) => console.error("Error during login: ", error));
+    });
   }
 
   const togglePassword = () => {
