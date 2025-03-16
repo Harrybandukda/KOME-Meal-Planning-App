@@ -1,6 +1,6 @@
 const { Sequelize } = require('sequelize');
 const populateDatabase = require('./populate')
-const sequelize = new Sequelize('postgres://komedb:komepass7@localhost:5433/kome');
+const sequelize = new Sequelize(process.env.DATABASE_URL);
 
 const models = [
     require("./model/allergies"),

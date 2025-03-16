@@ -1,6 +1,18 @@
 version: '3.4'
 
 services:
+  db:
+    image: postgres:latest
+    container_name: kome_db
+    environment:
+      POSTGRES_USER: komedb
+      POSTGRES_PASSWORD: komepass7
+      POSTGRES_DB: kome
+    ports:
+      - "5433:5432"
+    volumes:
+      - ./data/postgres:/var/lib/postgresql/data
+
   capstoneserver:
     image: capstoneserver
     build:
@@ -8,5 +20,24 @@ services:
       dockerfile: ./Dockerfile
     environment:
       NODE_ENV: production
+      PORT: 3123
+      APP_URL: http://localhost:3000
+      DATABASE_URL: postgres://komedb:komepass7@db:5432/kome
     ports:
-      - 3450:3450
+      - 3123:3123
+    depends_on:
+      - db
+  capstonewebclient:
+    image: capstonewebclient
+    build:
+      context: web
+      dockerfile: ./Dockerfile
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      NEXT_PUBLIC_ENV: development
+      NEXT_PUBLIC_SERVER_URL: https://kome.my
+    ports:
+      - 3000:3000
+    depends_on:
+      - capstoneserver

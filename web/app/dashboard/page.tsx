@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect, useContext, use } from "react"
+import { useState, useEffect, useContext } from "react"
 import { DashboardSidebar } from "@/components/dashboard-sidebar"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -53,17 +53,7 @@ export default function Dashboard() {
     });
 
     setDates(dateArray);
-  }, [userId, isLoading]);
-
-  useEffect(() => {
-    if (!dates || dates.length === 0) {
-      return;
-    }
-
-    if (!selectedDate) {
-      handleDateSelect(0);
-    }
-  }, [dates]);
+  }, [userId, isLoading, router]);
 
   const handleDateSelect = async (dateIndex: number) => {
     setSelectedDate(dates[dateIndex].formatted);
@@ -87,6 +77,16 @@ export default function Dashboard() {
       }
     }
   }
+
+  useEffect(() => {
+    if (!dates || dates.length === 0) {
+      return;
+    }
+
+    if (!selectedDate) {
+      handleDateSelect(0);
+    }
+  }, [dates, selectedDate, handleDateSelect]);
 
   const loadMealRecipe = async (recipeId: string) => {
     console.log("Loading recipe for: ", recipeId);

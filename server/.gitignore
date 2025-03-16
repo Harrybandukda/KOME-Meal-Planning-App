@@ -22,9 +22,6 @@
 *.pem
 .vscode
 
-# database
-/data
-
 # debug
 npm-debug.log*
 yarn-debug.log*

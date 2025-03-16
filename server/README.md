@@ -2,10 +2,9 @@ Backend for KOME food decider app with PostgreSQL.
 
 ## Getting Started
 
-First, run the server part:
+To run the server part only:
 
 ```bash
-docker compose up
 npm run dev
 ```
 You should be able to connect to the backend using localhost:3123

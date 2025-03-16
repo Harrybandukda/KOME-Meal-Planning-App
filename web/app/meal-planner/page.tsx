@@ -137,7 +137,7 @@ export default function MealPlanner() {
   const [activeDay, setActiveDay] = useState("Wednesday")
   const [selectedMeal, setSelectedMeal] = useState("breakfast")
 
-  const { isLoading, userId, userName } = useContext(AppContext);
+  const { isLoading, userId } = useContext(AppContext);
   const router = useRouter();
 
   useEffect(() => {
@@ -147,7 +147,7 @@ export default function MealPlanner() {
       router.push("/login");
       return;
     }
-  }, [userId, isLoading]);
+  }, [userId, isLoading, router]);
 
   return (
     <div className="min-h-screen bg-white font-sans">

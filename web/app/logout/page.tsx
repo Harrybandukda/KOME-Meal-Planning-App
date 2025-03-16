@@ -14,7 +14,7 @@ export default function LoginPage() {
     console.log("Logout mounted");
     setUserId("");
     router.push("/");
-  }, []);
+  }, [router, setUserId]);
 
   return (
     <ErrorBoundary>
