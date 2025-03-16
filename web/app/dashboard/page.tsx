@@ -133,10 +133,17 @@ export default function Dashboard() {
     const response = await fetch(buildURL("/api/meal_plan/create"), {
       method: "POST",
       headers: {
+        "Authorization": `Bearer ${localStorage.getItem("token")}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({ userId, weekday }),
     });
+
+    if (response.status !== 200) {
+      console.error("Error creating meal plan: ", response.statusText);
+      return;
+    }
+
     const data = await response.json();
     console.log("Meal plan created for the day: ", data);
 

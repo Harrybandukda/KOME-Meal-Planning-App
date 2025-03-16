@@ -24,7 +24,7 @@ export default function SignUpPage() {
       email: { value: string };
       password: { value: string };
     };
-    const fullName = target.fullName.value
+    const full_name = target.fullName.value
     const email = target.email.value;
     const password = target.password.value;
 
@@ -33,7 +33,7 @@ export default function SignUpPage() {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ email, password, fullName }),
+      body: JSON.stringify({ email, password, full_name }),
     })
     .then((response) => response.json())
     .then((data) => {

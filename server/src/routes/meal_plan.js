@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const mealPlanController = require('../controllers/meal_plan');
+const sessionController = require('../controllers/session');
 
 // Get all plans 
 router.get('/', async (req, res) => {
@@ -36,11 +37,18 @@ router.post('/create', async (req, res) => {
     try {
         const { userId, weekday } = req.body;
 
+        await sessionController.rejectIfNotAuthorized(req, userId);
+
         const plan = await mealPlanController.generateMealPlan(userId, weekday);
 
         res.status(201).send(plan);
     } catch(err) {
-        res.status(500).json({ message: err.message });
+        if (err.message === "Unauthorized") {
+            res.status(401).json({ message: err.message });
+        } else {
+            res.status(500).json({ message: err.message });
+        }
+
     }
 })
 

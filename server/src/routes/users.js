@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const userController = require('../controllers/users');
+const sessionController = require('../controllers/session');
 
 router.post('/signup', async (req, res) => {
     try {
@@ -20,7 +21,9 @@ router.post('/login', async (req, res) => {
 
         const user = await userController.loginUser(email, password);
 
-        res.status(200).json({ message: "Login successful.", id: user.id });
+        const session = await sessionController.createSession(user.id);
+
+        res.status(200).json({ message: "Login successful.", id: user.id, token: session.identifier });
     } catch (err) {
         res.status(400).json({ message: err.message });
     }
@@ -30,11 +33,17 @@ router.get('/:id', async (req, res) => {
     try {
         const id = req.params.id;
 
+        await sessionController.rejectIfNotAuthorized(req, id);
+
         const user = await userController.getUser(id);
 
         res.status(200).json(user);
     } catch (err) {
-        res.status(500).json({ message: err.message });
+        if (err.message === "Unauthorized") {
+            res.status(401).json({ message: err.message });
+        } else {
+            res.status(500).json({ message: err.message });
+        }
     }
 });
 
@@ -43,23 +52,35 @@ router.put('/:id', async (req, res) => {
         const id = req.params.id;
         const { email, full_name, weight, gender, goal } = req.body;
 
+        await sessionController.rejectIfNotAuthorized(req, id);
+
         const user = await userController.updateUser(id, email, full_name, weight, gender, goal);
 
         res.status(204).json(user);
     } catch (err) {
-        res.status(500).json({ message: err.message });
+        if (err.message === "Unauthorized") {
+            res.status(401).json({ message: err.message });
+        } else {
+            res.status(500).json({ message: err.message });
+        }
     }
 });
 
 router.put('/update/password', async (req, res) => {
     try{ 
-        const { id, password } = req.body
+        const { id, password } = req.body;
+
+        await sessionController.rejectIfNotAuthorized(req, id);
         
-        await  userController.updatePassword(id, password); 
+        await userController.updatePassword(id, password); 
 
         res.status(204).json({message: "Sucessfully updated password."});
     } catch(err) {
-        res.status(500).json({ message: err.message });
+        if (err.message === "Unauthorized") {
+            res.status(401).json({ message: err.message });
+        } else {
+            res.status(500).json({ message: err.message });
+        }
     }
 })
 
@@ -67,12 +88,18 @@ router.put('/update/password', async (req, res) => {
 router.put('/update/weight', async (req, res) => {
     try{ 
         const { id, weight } = req.body
+
+        await sessionController.rejectIfNotAuthorized(req, id);
         
         await  userController.updateWeight(id, weight) 
 
         res.status(204).json({message: "Sucessfully updated weight."})
     } catch(err) {
-        res.status(500).json({ message: err.message });
+        if (err.message === "Unauthorized") {
+            res.status(401).json({ message: err.message });
+        } else {
+            res.status(500).json({ message: err.message });
+        }
     }
 })
 
@@ -80,12 +107,18 @@ router.put('/update/weight', async (req, res) => {
 router.put('/update/weight', async (req, res) => {
     try{ 
         const { id, goal } = req.body
+
+        await sessionController.rejectIfNotAuthorized(req, id);
         
         await  userController.updateGoal(id, goal) 
 
         res.status(204).json({message: "Sucessfully updated goal."})
     } catch(err) {
-        res.status(500).json({ message: err.message });
+        if (err.message === "Unauthorized") {
+            res.status(401).json({ message: err.message });
+        } else {
+            res.status(500).json({ message: err.message });
+        }
     }
 })
 

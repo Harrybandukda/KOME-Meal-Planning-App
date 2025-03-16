@@ -48,9 +48,10 @@ export default function LoginPage() {
       return response.json();
     })
     .then((data) => {
-      console.log("Login successful: ", data);
+      console.log("Login successful");
 
       setUserId(data.id);
+      localStorage.setItem("token", data.token);
       router.push("/dashboard");
     })
     .catch((error) => console.error("Error during login: ", error));

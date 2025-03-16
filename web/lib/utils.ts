@@ -14,3 +14,26 @@ export function getServerURL() {
 export function buildURL(route: string) {
   return getServerURL() + route;
 }
+
+export function sendRequest<T>(url: string, method: string = 'GET', body: any): Promise<T> {
+  const options: RequestInit = {
+    method: "GET",
+    headers: {
+      "Authorization": `Bearer ${localStorage.getItem("token")}`,
+      "Content-Type": "application/json",
+    }
+  };
+
+  if (method !== "GET") {
+    options.method = method;
+    options.body = JSON.stringify(body);
+  }
+
+  return fetch(buildURL(url), options)
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error("Request failed");
+      }
+      return response.json();
+    });
+}

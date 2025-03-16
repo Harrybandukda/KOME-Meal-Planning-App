@@ -10,7 +10,9 @@ const mealPlanRoutes = require('./routes/meal_plan');
 
 const app = express();
 
-app.use(cors());
+const appURL = process.env.APP_URL || 'http://localhost:3000';
+
+app.use(cors({credentials: true, origin: appURL}));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 

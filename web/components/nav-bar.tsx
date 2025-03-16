@@ -22,8 +22,8 @@ export function NavBar() {
         <Link href="/explore" className="text-gray-700 font-medium">
           EXPLORE
         </Link>
-        <Link href="/meal-plan" className="text-gray-700 font-medium">
-          MEAL PLAN
+        <Link href="/dashboard" className="text-gray-700 font-medium">
+          DASHBOARD
         </Link>
         <Link href="/top-recipes" className="text-gray-700 font-medium">
           TOP RECIPES

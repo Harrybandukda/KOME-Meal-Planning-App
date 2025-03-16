@@ -24,7 +24,7 @@ const userController = {
         const user = await models.User.findOne({ where: { email } });
 
         if (!user) {
-            throw Error("User not found.");
+            throw Error("Invalid username or password.");
         }
 
         const valid = comparePassword(user, password);

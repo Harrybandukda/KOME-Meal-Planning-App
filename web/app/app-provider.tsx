@@ -1,6 +1,6 @@
 'use client'
  
-import { buildURL } from '@/lib/utils'
+import { sendRequest } from '@/lib/utils'
 import { createContext, useEffect, useState } from 'react'
 
 export type AppContextType = {
@@ -42,9 +42,8 @@ export function AppProvider({
     if (userId) {
       localStorage.setItem("userId", userId);
 
-      fetch(buildURL("/api/user/" + userId))
-        .then((response) => response.json())
-        .then((data) => {
+      sendRequest(`/api/user/${userId}`, "GET", {})
+        .then((data: any) => {
           setUserName(data.full_name);
         });
     } else {
