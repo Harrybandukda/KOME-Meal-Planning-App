@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect, useContext } from "react"
+import { useState, useEffect, useContext, use } from "react"
 import { DashboardSidebar } from "@/components/dashboard-sidebar"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -23,12 +23,17 @@ const getDayName = (date: Date): string => {
 
 export default function Dashboard() {
   // Generate 8 days starting from today
-  const [dates, setDates] = useState<Array<{ date: Date; formatted: string; dayName: string }>>([])
+  const [dates, setDates] = useState<Array<{ index: number, date: Date; formatted: string; dayName: string }>>([])
   const [selectedDate, setSelectedDate] = useState<string>("")
   const [selectedMeals, setSelectedMeals] = useState<any>(null)
   const { userId, userName } = useContext(AppContext);
 
   useEffect(() => {
+    if (!userId) {
+      console.error("User ID not found, redirect to login");
+      return;
+    }
+
     const today = new Date()
     const dateArray = Array.from({ length: 8 }, (_, i) => {
       const date = new Date(today)
@@ -37,15 +42,25 @@ export default function Dashboard() {
         date,
         formatted: formatDate(date),
         dayName: getDayName(date),
+        index: i,
       }
-    })
+    });
 
-    setDates(dateArray)
-    handleDateSelect(dateArray[0].formatted);
+    setDates(dateArray);
   }, [userId]);
 
-  const handleDateSelect = async (formattedDate: string) => {
-    setSelectedDate(formattedDate);
+  useEffect(() => {
+    if (!dates || dates.length === 0) {
+      return;
+    }
+
+    if (!selectedDate) {
+      handleDateSelect(0);
+    }
+  }, [dates]);
+
+  const handleDateSelect = async (dateIndex: number) => {
+    setSelectedDate(dates[dateIndex].formatted);
 
     console.log("Dashboard loading meal plans");
 
@@ -56,9 +71,15 @@ export default function Dashboard() {
     console.log(meals);
 
     if (meals && meals.length > 0) {
-      const meal = await mapMealPlan(meals[0]);
-      console.log("Selected meal plan: ", meal);
-      setSelectedMeals(meal);
+      const meal = meals.find((mealPlan: any) => mealPlan.weekday === dateIndex);
+
+      if (meal) {
+        const mappedMeal = await mapMealPlan(meal);
+        console.log("Selected meal plan: ", mappedMeal);
+        setSelectedMeals(mappedMeal);
+      } else {
+        setSelectedMeals(null);
+      }
     }
   }
 
@@ -92,22 +113,29 @@ export default function Dashboard() {
     return meal;
   }
 
-  const createMealPlan = async (date: string) => {
-    console.log("Creating meal plan for: ", date);
-    fetch(buildURL("/api/meal_plan/create/" + userId), {
+  const createMealPlan = async (selectedDate: string) => {
+    console.log("Creating meal plan for: ", selectedDate);
+
+    const date = dates.find((dateObj) => dateObj.formatted === selectedDate);
+    if (!date) {
+      console.error("Invalid date selected: ", selectedDate);
+      return;
+    }
+
+    const weekday = date.index;
+
+    const response = await fetch(buildURL("/api/meal_plan/create"), {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-      }
-    })
-    .then((response) => response.json())
-    .then((data) => {
-      console.log("Meal plan created for the day: ", data);
+      },
+      body: JSON.stringify({ userId, weekday }),
+    });
+    const data = await response.json();
+    console.log("Meal plan created for the day: ", data);
 
-      const meal = mapMealPlan(data);
-      setSelectedMeals(meal);
-    })
-    .catch((error) => console.error("Error creating meal plan: ", error));
+    const meal = await mapMealPlan(data);
+    setSelectedMeals(meal);
   };
 
   return (
@@ -174,7 +202,7 @@ export default function Dashboard() {
               {dates.map((dateObj) => (
                 <button
                   key={dateObj.formatted}
-                  onClick={() => handleDateSelect(dateObj.formatted)}
+                  onClick={() => handleDateSelect(dateObj.index)}
                   className={`flex flex-col items-center p-4 rounded-xl transition-colors ${
                     selectedDate === dateObj.formatted
                       ? "bg-[#42B5E7] text-white"

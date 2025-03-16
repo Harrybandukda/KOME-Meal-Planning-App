@@ -1,5 +1,6 @@
 'use client'
  
+import { buildURL } from '@/lib/utils'
 import { createContext, useEffect, useState } from 'react'
 
 export type AppContextType = {
@@ -24,7 +25,7 @@ export function AppProvider({
 
   useEffect(() => {
     if (userId) {
-      fetch("/api/user/" + userId)
+      fetch(buildURL("/api/user/" + userId))
         .then((response) => response.json())
         .then((data) => {
           setUserName(data.full_name);

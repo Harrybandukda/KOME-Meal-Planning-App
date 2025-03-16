@@ -10,7 +10,7 @@ const userController = {
         const existingUser = await models.User.findOne({ where: { email } });
 
         if (existingUser) {
-            return res.status(409).json({ message: "User already exists." });
+            throw Error("User already exists.");
         }
 
 		const hash = bcrypt.hashSync(password, 10);

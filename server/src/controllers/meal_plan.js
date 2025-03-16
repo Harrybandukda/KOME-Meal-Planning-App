@@ -35,7 +35,7 @@ const mealPlanController = {
             throw new Error("Error getting user meal plans: ", err.message);
         }
     },
-    generateMealPlan: async (userId) => {
+    generateMealPlan: async (userId, weekday) => {
         try {
             // get all allergies 
             const user = await models.User.findByPk(userId);
@@ -58,6 +58,7 @@ const mealPlanController = {
             mealPlan.lunch = getRandomElement(validRecipes).id;
             mealPlan.dinner = getRandomElement(validRecipes).id;
             mealPlan.UserId = user.id;
+            mealPlan.weekday = weekday;
 
             user.addMealPlan(mealPlan);
 

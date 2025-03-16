@@ -32,9 +32,11 @@ router.get('/user/:id', async (req, res) => {
     }
 })
 
-router.post('/create/:userId', async (req, res) => {
+router.post('/create', async (req, res) => {
     try {
-        const plan = await mealPlanController.generateMealPlan(req.params.userId);
+        const { userId, weekday } = req.body;
+
+        const plan = await mealPlanController.generateMealPlan(userId, weekday);
 
         res.status(201).send(plan);
     } catch(err) {
