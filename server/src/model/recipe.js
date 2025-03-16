@@ -15,7 +15,7 @@ module.exports = (sequelize) => {
 
     author: {
         type: DataTypes.INTEGER,
-        allowNull: false
+        allowNull: true
     },
 
     link: {

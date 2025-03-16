@@ -129,10 +129,55 @@ async function populateDatabase(models) {
             { QuestionnaireId: questions[11].id, CategoryId: categories[23].id }
         ]);
 
+        await models.Recipe.bulkCreate([
+            {
+                name: "Gluten Free Turkey Meatballs",
+                link: "https://www.eatingwithfoodallergies.com/wp-content/uploads/2021/03/Gluten-Free-Turkey-Meatballs-2.jpg",
+                description: "These gluten free turkey meatballs are so quick and easy to make using a pressure cooker that you’ll want them in your regular dinner rotation. Plus they’re dairy, egg, soy, and gluten free!",
+                instructions: "Start by combining all of the ingredients in a small saucepan and cook over medium heat until it bubbles. Turn down the heat to low and simmer for 5 minutes. Add barbecue sauce."
+            },
+            {
+                name: "Vegan Black Bean Soup",
+                link: "https://www.gimmesomeoven.com/wp-content/uploads/2024/12/Quick-Black-Bean-Soup-12.jpg",
+                description: "This quick black bean soup recipe is full of flavor and protein and comes together in less than 30 minutes!",
+                instructions: "Heat the oil in a large stockpot over medium-high heat. Add the onion, carrot, bell pepper and sauté for 6 minutes. Add in the garlic, cumin, chili powder and chipotle powder and sauté. Add the vegetable broth and black beans and stir to combine."
+            },
+            {
+                name: "Cream of Mushroom Soup",
+                link: "https://www.eatingwithfoodallergies.com/wp-content/uploads/2020/08/Cream-of-mushroom-soup-2-1024x1024.png",
+                description: "This cream of mushroom soup is a versatile dish that can be eaten by the bowl or kept thicker to use in casseroles.",
+                instructions: "Heat beef stock and 4 cups of rice milk in a large soup pot and bring to a boil. Add crushed rice noodles and salt. Add stirred mushroom. When soup is thick, using a hand held immersion blender, puree the soup until smooth. Add rice milk. "
+            },
+            {
+                name: "Quinoa and Rice With Sweet Potatoes",
+                link: "https://www.eatingwithfoodallergies.com/wp-content/uploads/2020/08/Quinoa-and-rice-with-sweet-potatoes-2.png",
+                description: "Hearty and nutritious quinoa and rice with sweet potatoes is a satisfying dish that can be a side dish or a meal on its own and it's free of the top 8 allergens.",
+                instructions: "Chopped vegetables saute in extra virgin olive oil over medium heat. When your veggies are done cooking and you've rinsed the quinoa, you can combine all ingredients in a casserole dish and bake 30 minutes at 400 F."
+            },
+            {
+                name: "Dairy Free Chicken Pot Pie {Allergy Friendly}",
+                link: "https://www.eatingwithfoodallergies.com/wp-content/uploads/2020/10/Chicken-pot-pie-2.jpg",
+                description: "A hearty, creamy chicken stew is topped with pie crust rounds to create single servings of gluten and dairy free chicken pot pie. It's a spin on the traditional dish but is free from other common allergens so everyone can enjoy it!",
+                instructions: "Stir in the broth and dairy free milk. Add fried chicken breast with stirred vegetables. Cook and stir until the mixture is thickened. Serve topped with a pie crust round from gluten-free flour."
+            },
+            {
+                name: "Gluten-Free Chili {Allergy Friendly}", 
+                link: "https://www.eatingwithfoodallergies.com/wp-content/uploads/2023/03/Gluten-free-chili-featured.jpg",
+                description: "This gluten-free chili is a delicious and healthy dish that is so easy to make on the stovetop, Instant Pot, or slow cooker. It's free from common allergens like wheat, dairy, and soy so it can be enjoyed by everyone",
+                instructions: "Saute the meat, onion, and celery. Once the meat is browned and the onion and celery are tender, add the garlic and seasonings and cook for another minute. Then, turn off heat and add the other ingredients."
+            },
+            {
+                name: "Gluten and Dairy Free Mexican Lasagna", 
+                link: "https://www.eatingwithfoodallergies.com/wp-content/uploads/2020/07/Untitled-design-34-1024x1024.png",
+                description: "Looking for an easy dinner that your whole family will love and is free of the top 8 allergens? Try this gluten and dairy free Mexican lasagna! It's on my regular weeknight meal rotation because it's simple to make and my family loves it!",
+                instructions: "Brown the ground turkey in a skillet until no longer pink. Add the onion and cook until translucent. Add the taco seasoning and water. Stir in the beans, salsa, and corn and cook over medium heat until bubbling."
+            },
+        ]);
+
         console.log('Database populated successfully');
     } catch (error) {
         console.error('Error populating the database:', error);
     }
 }
 
-module.exports = populateDatabase
+module.exports = populateDatabase;
