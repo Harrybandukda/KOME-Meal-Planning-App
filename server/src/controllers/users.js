@@ -88,40 +88,6 @@ const userController = {
         await user.save();
 
         return user;
-    },
-    updateWeight: async (userId, weight) => {
-        try {
-            // Should be some frontend code that ensures valid weight
-            const user = await models.User.findByPk(userId)
-
-            if (!user) {
-                throw Error("User not found.")
-            }
-
-            user.weight = weight
-            await user.save()
-            
-        } catch (err) {
-            console.log(err.message)
-            return err.message
-        }
-    },
-    updateGoal: async (userId, goal) => {
-        try {
-            // Find User
-            const user = await models.User.findByPk(userId)
-
-            if (!user) {
-                throw Error("User not found.")
-            }
-
-            user.goal = goal
-            await user.save()
-            
-        } catch (err) {
-            console.log(err.message)
-            return err.message
-        }
     }
 };
 
