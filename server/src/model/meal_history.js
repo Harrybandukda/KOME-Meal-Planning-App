@@ -9,7 +9,7 @@ module.exports = (sequelize) => {
     },
     date: { 
         type: DataTypes.DATE,
-        default: Date.now()
+        default: DataTypes.NOW
     }
 });
 }

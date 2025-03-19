@@ -55,7 +55,7 @@ async function populateDatabase(models) {
         ]);
 
         // Populate Dietary Restrictions 
-        await models.DietaryRestrictions.bulkCreate([
+        const dietRest = await models.DietaryRestrictions.bulkCreate([
             { name: "Gluten-Free" },
             { name: "Vegan" },
             { name: "Vegetarian" },
@@ -70,7 +70,7 @@ async function populateDatabase(models) {
         ]);
 
         // Populate Allergies
-        await models.Allergies.bulkCreate([
+        const allergies = await models.Allergies.bulkCreate([
             { name: "Eggs" },
             { name: "Dairy" },
             { name: "Wheat" },
@@ -389,6 +389,62 @@ async function populateDatabase(models) {
             { RecipeId: recipes.id[6], CategoriesId: categories.id[16] },
             { RecipeId: recipes.id[6], CategoriesId: categories.id[20] },
             { RecipeId: recipes.id[6], CategoriesId: categories.id[35] },
+        ])
+
+        // Populate Users 
+        const users = await models.User.bulkCreate([
+            {
+                email: "jhondoe@domain.ca",
+                full_name: "John Doe",
+                password: "",
+                weight: 120,
+                gender: "Male",
+                goal: "Maintain weight"
+            },
+            {
+                email: "janesmith@domain.ca",
+                full_name: "Jane Smith",
+                password: "",
+                weight: 120,
+                gender: "Female",
+                goal: "Lose weight"
+            },
+            {
+                email: "spoon@domain.ca",
+                full_name: "Spoon Smith",
+                password: "",
+                weight: 100,
+                gender: "Prefer not to say",
+                goal: "Gain weight"
+            }
+        ])
+
+        // Populate UserAllergies
+        await users.id[0].addAllergy(allergies.id[0])
+        await users.id[0].addAllergy(allergies.id[4])
+        await users.id[1].addAllergy(allergies.id[2])
+        await users.id[2].addAllergy(allergies.id[2])
+        await users.id[2].addAllergy(allergies.id[3])
+        await users.id[2].addAllergy(allergies.id[4])
+        await users.id[2].addAllergy(allergies.id[5])
+        await users.id[2].addAllergy(allergies.id[6])
+
+        // Populate UserDietaryRestrictions
+        await users.id[1].addDietaryRestriction(dietRest.id[0])
+        await users.id[2].addDietaryRestriction(dietRest.id[2])
+        await users.id[2].addDietaryRestriction(dietRest.id[3])
+        await users.id[2].addDietaryRestriction(dietRest.id[4])
+
+        // Populate MealHistory
+        await models.MealHistory.bulkCreate([
+            { userId: users.id[0], recipeId: recipes.id[4] },
+            { userId: users.id[0], recipeId: recipes.id[1] },
+            { userId: users.id[0], recipeId: recipes.id[0] },
+            { userId: users.id[1], recipeId: recipes.id[5] },
+            { userId: users.id[1], recipeId: recipes.id[2] },
+            { userId: users.id[2], recipeId: recipes.id[3] },
+            { userId: users.id[2], recipeId: recipes.id[5] },
+            { userId: users.id[2], recipeId: recipes.id[6] },
         ])
 
         console.log('Database populated successfully');
