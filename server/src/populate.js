@@ -339,7 +339,57 @@ async function populateDatabase(models) {
         ])
 
         // Populate RecipeCategories
-        await models.RecipeCategories.bulkCreate()
+        await models.RecipeCategories.bulkCreate([
+            { RecipeId: recipes.id[0], CategoriesId: categories.id[13] }, 
+            { RecipeId: recipes.id[0], CategoriesId: categories.id[16] },
+            { RecipeId: recipes.id[0], CategoriesId: categories.id[20] },
+            { RecipeId: recipes.id[0], CategoriesId: categories.id[24] },
+            { RecipeId: recipes.id[0], CategoriesId: categories.id[25] },
+            { RecipeId: recipes.id[0], CategoriesId: categories.id[27] },
+
+            { RecipeId: recipes.id[1], CategoriesId: categories.id[13] },
+            { RecipeId: recipes.id[1], CategoriesId: categories.id[16] },
+            { RecipeId: recipes.id[1], CategoriesId: categories.id[20] },
+            { RecipeId: recipes.id[1], CategoriesId: categories.id[25] },
+            { RecipeId: recipes.id[1], CategoriesId: categories.id[35] },
+            { RecipeId: recipes.id[1], CategoriesId: categories.id[40] },
+            { RecipeId: recipes.id[1], CategoriesId: categories.id[46] },
+            { RecipeId: recipes.id[1], CategoriesId: categories.id[47] },
+
+            { RecipeId: recipes.id[2], CategoriesId: categories.id[10] },
+            { RecipeId: recipes.id[2], CategoriesId: categories.id[13] },
+            { RecipeId: recipes.id[2], CategoriesId: categories.id[20] },
+            { RecipeId: recipes.id[2], CategoriesId: categories.id[25] },
+            { RecipeId: recipes.id[2], CategoriesId: categories.id[40] },
+
+            { RecipeId: recipes.id[3], CategoriesId: categories.id[13] },
+            { RecipeId: recipes.id[3], CategoriesId: categories.id[16] },
+            { RecipeId: recipes.id[3], CategoriesId: categories.id[20] },
+            { RecipeId: recipes.id[3], CategoriesId: categories.id[25] },
+            { RecipeId: recipes.id[3], CategoriesId: categories.id[46] },
+            { RecipeId: recipes.id[3], CategoriesId: categories.id[47] },
+            { RecipeId: recipes.id[3], CategoriesId: categories.id[48] },
+            
+            { RecipeId: recipes.id[4], CategoriesId: categories.id[13] },
+            { RecipeId: recipes.id[4], CategoriesId: categories.id[16] },
+            { RecipeId: recipes.id[4], CategoriesId: categories.id[20] },
+            { RecipeId: recipes.id[4], CategoriesId: categories.id[25] },
+            { RecipeId: recipes.id[4], CategoriesId: categories.id[40] },
+
+            { RecipeId: recipes.id[5], CategoriesId: categories.id[13] },
+            { RecipeId: recipes.id[5], CategoriesId: categories.id[16] },
+            { RecipeId: recipes.id[5], CategoriesId: categories.id[23] },
+            { RecipeId: recipes.id[5], CategoriesId: categories.id[24] },
+            { RecipeId: recipes.id[5], CategoriesId: categories.id[25] },
+            { RecipeId: recipes.id[5], CategoriesId: categories.id[35] },
+            { RecipeId: recipes.id[5], CategoriesId: categories.id[40] },
+
+            { RecipeId: recipes.id[6], CategoriesId: categories.id[12] },
+            { RecipeId: recipes.id[6], CategoriesId: categories.id[13] },
+            { RecipeId: recipes.id[6], CategoriesId: categories.id[16] },
+            { RecipeId: recipes.id[6], CategoriesId: categories.id[20] },
+            { RecipeId: recipes.id[6], CategoriesId: categories.id[35] },
+        ])
 
         console.log('Database populated successfully');
     } catch (error) {
