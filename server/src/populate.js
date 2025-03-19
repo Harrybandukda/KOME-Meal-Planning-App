@@ -129,7 +129,7 @@ async function populateDatabase(models) {
             { QuestionnaireId: questions[11].id, CategoryId: categories[23].id }
         ]);
 
-        await models.Recipe.bulkCreate([
+        const recipes = await models.Recipe.bulkCreate([
             {
                 name: "Gluten Free Turkey Meatballs",
                 link: "https://www.eatingwithfoodallergies.com/wp-content/uploads/2021/03/Gluten-Free-Turkey-Meatballs-2.jpg",
@@ -173,6 +173,170 @@ async function populateDatabase(models) {
                 instructions: "Brown the ground turkey in a skillet until no longer pink. Add the onion and cook until translucent. Add the taco seasoning and water. Stir in the beans, salsa, and corn and cook over medium heat until bubbling."
             },
         ]);
+
+        // Populate ingredients 
+        const ingredients = await models.Ingredients.bulkCreate([
+            { name: "Glutten Free Bread Crumbs" },
+            { name: "Dairy Free Milk" },
+            { name: "Ground Beef" },
+            { name: "Ground Pork" },
+            { name: "Brown Sugar" },
+            { name: "Ground Pepper" },
+            { name: "Salt" }, // id 6
+            { name: "Nutmeg" },
+            { name: "Onion Powder" },
+            { name: "Garlic Powder" },
+            { name: "Allspice" }, // id 10
+            { name: "Black Beans" },
+            { name: "Tomatoes" },
+            { name: "Yellow Onions" },
+            { name: "Carrots" }, // 14
+            { name: "Red Bell Pepper" },
+            { name: "Garlic" },            
+            { name: "Ground Cumin" },            
+            { name: "Chili Powder" },            
+            { name: "Chipotle Powder" },            
+            { name: "Veggetable Broth" },            
+            { name: "Lime" },            
+            { name: "Cilantro" },            
+            { name: "Cheddar Cheese" },            
+            { name: "Avacado" },            
+            { name: "Red Onion" }, // id 25     
+            { name: "Mushrooms" },            
+            { name: "Beef Stock" },            
+            { name: "Rice Milk" },            
+            { name: "Rice Noodles" },            
+            { name: "Canola Oil" },            
+            { name: "Shallots" },            
+            { name: "Button Mushrooms" },            
+            { name: "Dry Sherry" }, // id 33
+            { name: "Extra Virgin Olive Oil" },            
+            { name: "Celery" },            
+            { name: "Sweet Potato" },            
+            { name: "Brown Rice" },            
+            { name: "Quinoa" },            
+            { name: "Chicken Broth" },            
+            { name: "Dried Thyme Leaves" }, 
+            { name: "Cooking Spray" }, // 41            
+            { name: "Chicken Breast" },            
+            { name: "Glutten Free All Purpose Flower" },                   
+            { name: "Rubbed Sage" },            
+            { name: "Glutten Free Chicken Stock" },                
+            { name: "Frozen Mixed Vegetables" },            
+            { name: "Sugar" },                
+            { name: "Dairy Free Margarine" },            
+            { name: "Shortening" },                
+            { name: "Vinegar" }, // 50 
+            { name: "Lean Ground Beef" },                
+            { name: "Dried Oregano" },            
+            { name: "Marinara Sauce" },                
+            { name: "Diced Tomatoes and Green Chilis" },            
+            { name: "Dark Red Kidney Beans" },                
+            { name: "Gluten Free Beef Broth" },            
+            { name: "Bay Leaves" }, // 57
+            { name: "Ground Turkey" },         
+            { name: "Gluten Free Taco Seasoning" },
+            { name: "Tomato Salsa" },
+            { name: "Froxen Corn" },
+            { name: "Corn Tortillas" },
+            { name: "Dairy Free Cheese" }, // 63
+            { name: "" },
+        ]);
+
+        // Populate RecipeIngredients
+        await models.RecipeIngredients.bulkCreate([
+            { RecipeId: 0, IngredientsId: 0 },
+            { RecipeId: 0, IngredientsId: 1 },
+            { RecipeId: 0, IngredientsId: 2 },
+            { RecipeId: 0, IngredientsId: 3 },
+            { RecipeId: 0, IngredientsId: 4 },
+            { RecipeId: 0, IngredientsId: 5 },
+            { RecipeId: 0, IngredientsId: 6 },
+            { RecipeId: 0, IngredientsId: 7 },
+            { RecipeId: 0, IngredientsId: 8 },
+            { RecipeId: 0, IngredientsId: 9 },
+            { RecipeId: 0, IngredientsId: 10 },
+
+            { RecipeId: 1, IngredientsId: 11 },
+            { RecipeId: 1, IngredientsId: 12 },
+            { RecipeId: 1, IngredientsId: 13 },
+            { RecipeId: 1, IngredientsId: 14 },
+            { RecipeId: 1, IngredientsId: 15 },
+            { RecipeId: 1, IngredientsId: 16 },
+            { RecipeId: 1, IngredientsId: 17 },
+            { RecipeId: 1, IngredientsId: 18 },
+            { RecipeId: 1, IngredientsId: 19 },
+            { RecipeId: 1, IngredientsId: 20 },
+            { RecipeId: 1, IngredientsId: 21 },
+            { RecipeId: 1, IngredientsId: 22 },
+            { RecipeId: 1, IngredientsId: 23 },
+            { RecipeId: 1, IngredientsId: 24 },
+            { RecipeId: 1, IngredientsId: 25 },
+
+            { RecipeId: 2, IngredientsId: 6 },
+            { RecipeId: 2, IngredientsId: 26 },
+            { RecipeId: 2, IngredientsId: 27 },
+            { RecipeId: 2, IngredientsId: 28 },
+            { RecipeId: 2, IngredientsId: 29 },
+            { RecipeId: 2, IngredientsId: 30 },
+            { RecipeId: 2, IngredientsId: 31 },
+            { RecipeId: 2, IngredientsId: 32 },
+            { RecipeId: 2, IngredientsId: 33 },
+
+            { RecipeId: 3, IngredientsId: 6 },
+            { RecipeId: 3, IngredientsId: 13 },
+            { RecipeId: 3, IngredientsId: 14 },
+            { RecipeId: 3, IngredientsId: 34 },
+            { RecipeId: 3, IngredientsId: 35 },
+            { RecipeId: 3, IngredientsId: 36 },
+            { RecipeId: 3, IngredientsId: 37 },
+            { RecipeId: 3, IngredientsId: 38 },
+            { RecipeId: 3, IngredientsId: 39 },
+            { RecipeId: 3, IngredientsId: 40 },
+            { RecipeId: 3, IngredientsId: 41 },
+            
+            { RecipeId: 4, IngredientsId: 1 },
+            { RecipeId: 4, IngredientsId: 5 },
+            { RecipeId: 4, IngredientsId: 6 },
+            { RecipeId: 4, IngredientsId: 13 },
+            { RecipeId: 4, IngredientsId: 14 },
+            { RecipeId: 4, IngredientsId: 16 },
+            { RecipeId: 4, IngredientsId: 35 },
+            { RecipeId: 4, IngredientsId: 40 },
+            { RecipeId: 4, IngredientsId: 42 },
+            { RecipeId: 4, IngredientsId: 43 },
+            { RecipeId: 4, IngredientsId: 44 },
+            { RecipeId: 4, IngredientsId: 45 },
+            { RecipeId: 4, IngredientsId: 46 },
+            { RecipeId: 4, IngredientsId: 47 },
+            { RecipeId: 4, IngredientsId: 48 },
+            { RecipeId: 4, IngredientsId: 49 },
+            { RecipeId: 4, IngredientsId: 50 },
+            
+            { RecipeId: 5, IngredientsId: 4 },
+            { RecipeId: 5, IngredientsId: 11 },
+            { RecipeId: 5, IngredientsId: 13 },
+            { RecipeId: 5, IngredientsId: 15 },
+            { RecipeId: 5, IngredientsId: 17 },
+            { RecipeId: 5, IngredientsId: 18 },
+            { RecipeId: 5, IngredientsId: 35 },
+            { RecipeId: 5, IngredientsId: 51 },
+            { RecipeId: 5, IngredientsId: 52 },
+            { RecipeId: 5, IngredientsId: 53 },
+            { RecipeId: 5, IngredientsId: 54 },
+            { RecipeId: 5, IngredientsId: 55 },
+            { RecipeId: 5, IngredientsId: 56 },
+            { RecipeId: 5, IngredientsId: 57 },
+            
+            { RecipeId: 6, IngredientsId: 11 },
+            { RecipeId: 5, IngredientsId: 13 },
+            { RecipeId: 5, IngredientsId: 58 },
+            { RecipeId: 5, IngredientsId: 59 },
+            { RecipeId: 5, IngredientsId: 60 },
+            { RecipeId: 5, IngredientsId: 61 },
+            { RecipeId: 5, IngredientsId: 62 },
+            { RecipeId: 5, IngredientsId: 63 },
+        ])
 
         console.log('Database populated successfully');
     } catch (error) {
