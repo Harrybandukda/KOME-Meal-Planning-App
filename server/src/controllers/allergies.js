@@ -29,6 +29,17 @@ const allergiesController = {
 
             // save allergy 
             await models.Allergies.create({ name: name })
+
+            // Add ingredient relationship
+            const ingredients = await models.Ingredients.findAll({ name: name })
+            // Add relationship
+            if(ingredients.length > 0){
+                ingredients.forEach(async ing => {
+                    await models.Allergies.addIngredient(ing)
+                })
+            }
+
+            console.log(`Allergy ${name} created`)
         } catch (err) {
             console.log("Error adding allergies:", err.message)
             throw new Error("Error adding allergies:", err.message)

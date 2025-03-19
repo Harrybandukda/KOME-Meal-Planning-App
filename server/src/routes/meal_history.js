@@ -1,13 +1,13 @@
 const express = require('express');
 const router = express.Router();
-const mlController = require('../controllers/meal_history');
+const mhController = require('../controllers/meal_history');
 
 // Get users history 
 router.get('/:id', async (req, res) => {
     try {
         const { id } = req.params
 
-        await mlController.getMealHistory(id)
+        await mhController.getMealHistory(id)
 
         res.status(204).json({message: "Sucessfully got meal histroy."})
     } catch(err) {
@@ -20,7 +20,7 @@ router.post('/update/mealHistory', async (req, res) => {
     try{ 
         const { id, recipeId } = req.body
 
-        await mlController.addMealHistory(id, recipeId)
+        await mhController.addMealHistory(id, recipeId)
 
         res.status(204).json({message: "Sucessfully added to  meal history."})
     } catch(err) {
@@ -33,7 +33,7 @@ router.delete('/', async (req, res) => {
     try {
         const { id, recipe } = req.body
 
-        await mlController.deleteMealHistory(id, recipe)
+        await mhController.deleteMealHistory(id, recipe)
 
         res.status(204).json({message: "Sucessfully updated allergies."})
     } catch(err) {

@@ -16,15 +16,7 @@ const categoriesController = {
             console.log("Error getting categories:", err.message)
             throw new Error("Error getting categories:", err.message)
         }
-    },
-    // getCategories: async () => {
-    //     try {
-    //         return await models.Categories.findAll()
-    //     } catch (err) {
-    //         console.log("Error getting categories:", err.message)
-    //         throw new Error("Error getting categories:", err.message)
-    //     }
-    // },
+    }
 }
 
 module.exports = categoriesController

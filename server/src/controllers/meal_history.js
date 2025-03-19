@@ -1,6 +1,6 @@
 const { models } = require('../database');
 
-const mlController = {
+const mhController = {
     getMealHistory: async (userId) => {
         try {
             // Find user & users meal history 
@@ -24,17 +24,8 @@ const mlController = {
     },
     addMealHistory: async (userId, recipe) => {
         try {
-            const user = await models.User.findOne({ 
-                where: { id: userId },
-                include: { model: MealHistory }
-            })
-
-            if(!user){
-                return "User not found"
-            }
-
-            await user.addMealHistory(recipe)
-            console.log(`Added ${recipe.name}: ${user.username}'s meal history.`);
+            await models.MealHistories.create({ userId: userId, recipeId: recipe.id })
+            console.log(`Added ${recipe.name} to users meal history.`);
         } catch (err) {
             console.log("Error adding recipe to history:", err.message)
             throw new Error("Error adding recipe to history:", err.message)
@@ -42,19 +33,13 @@ const mlController = {
     },
     deleteMealHistory: async (userId, recipe) => {
         try {
-            // find user 
-            const user = await models.User.findByPk(userId)
-            if(!user){
-                return "User not found"
-            }
-
             await models.MealHistory.destroy({
                 where: {
-                    User: user,
-                    Recipe: recipe
+                    userId: userId,
+                    recipeId: recipe.id
                 }
             })
-            console.log(`Deleted ${recipe.name}: ${user.username}'s meal history.`);
+            console.log(`Deleted ${recipe.name} from users meal history.`);
         } catch (err) {
             console.log("Error deleting history:", err.message)
             throw new Error("Error deleting history:", err.message)
@@ -62,4 +47,4 @@ const mlController = {
     },
 }
 
-module.exports = mlController
+module.exports = mhController

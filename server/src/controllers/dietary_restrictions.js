@@ -1,4 +1,5 @@
 const { models } = require('../database');
+const { Op } = require('sequelize');
 
 const restrictionsController = {
     getRestrictions: async () => {
@@ -20,15 +21,26 @@ const restrictionsController = {
     addRestriction: async (name) => {
         try {
             // get all restrictions 
-            const restrictions = models.DietaryRestrictions.findAll()
+            const restrictions = await models.DietaryRestrictions.findAll()
         
             // verify allergy doesn't already exist 
-            if((await restrictions).includes(name)){
+            if(restrictions.includes(name)){
                 throw Error("Dietary restriction already exists")
             }
 
             // save allergy 
-            await models.DietaryRestrictions.create({ name: name })
+            const dietRes = await models.DietaryRestrictions.create({ name: name })
+
+            // Find if name the same as any category (case insensitive)
+            const categories = await models.Categories.findAll({ name: { [Op.iLike]: `%${name}%` }})
+            // Add to relationship
+            if(categories.length > 0){
+                categories.forEach(async cat => {
+                    await models.DietaryRestrictions.addCategory(cat)
+                })
+            }
+
+            console.log(`Dietary Restriction ${name} created.`)
         } catch (err) {
             console.log("Error adding dietary restrictions:", err.message)
             throw new Error("Error adding dietary restrictions:", err.message)
