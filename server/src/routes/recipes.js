@@ -50,9 +50,9 @@ router.post('/:id/addToUser/:userId', async (req, res) => {
 // Create recipe 
 router.post('/', async (req, res) => {
     try {
-        const { name, description, instructions, ingredients, categories } = req.body
+        const { user, name, description, instructions, ingredients, categories } = req.body
 
-        const recipe = await recipeController.createRecipe(name, description, instructions, ingredients, categories)
+        const recipe = await recipeController.createRecipe(user, name, description, instructions, ingredients, categories)
 
         res.status(201).send(recipe)
     } catch(err) {

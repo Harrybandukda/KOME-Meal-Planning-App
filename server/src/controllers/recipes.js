@@ -21,26 +21,36 @@ const recipeController = {
         const recipe = await models.Recipe.findByPk(recipeId);
         return await user.addRecipe(recipe);
     },
-    createRecipe: async (name, description, instructions, ingredients, categories) => { // Create Recipe 
+    createRecipe: async (user, name, description, instructions, ingredients, categories) => { // Create Recipe 
         try {
             // no duplicate name 
-            // API call to check the other db we're using? 
             const dupName = await models.Recipe.findOne({ where: { name: name }})
-            if(name){
+            if(dupName){
                 throw Error("Name already in use")
             }
 
             // create link for recipe 
+            const link = `https://kome.my/${name.replace(/ /g, '-')}`
             
-            // find ingredients
-            // API call to check other db we're using?
-
-            // find categories & save 
-            // find restrictions 
-
             // Save to Recipe db 
-            const recipe = await models.Recipe.create({name, description, instructions});
+            const recipe = await models.Recipe.create({
+                name: name,
+                author: user.full_name,
+                link: link,
+                description: description,
+                instructions: instructions, 
+            });
 
+            // Add Ingredients relationship
+            await models.Recipe.addIngredients(ingredients)
+
+            // Add Categories 
+            await models.Recipe.addCategories(categories)
+
+            // Add to user
+            await models.User.addRecipe(recipe)
+
+            console.log("Recipe created")
             return recipe; 
         } catch (err) {
             console.log("Error creating recipe:", err.message)
