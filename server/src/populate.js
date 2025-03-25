@@ -397,25 +397,25 @@ async function populateDatabase(models) {
                 email: "jhondoe@domain.ca",
                 full_name: "John Doe",
                 password: "",
-                weight: 120,
+                weight: 90,
                 gender: "Male",
-                goal: "Maintain weight"
+                goal: "Maintain Weight"
             },
             {
                 email: "janesmith@domain.ca",
                 full_name: "Jane Smith",
                 password: "",
-                weight: 120,
+                weight: 80,
                 gender: "Female",
-                goal: "Lose weight"
+                goal: "Lose Weight"
             },
             {
                 email: "spoon@domain.ca",
                 full_name: "Spoon Smith",
                 password: "",
-                weight: 100,
-                gender: "Prefer not to say",
-                goal: "Gain weight"
+                weight: 66,
+                gender: "Other",
+                goal: "Gain Weight"
             }
         ])
 

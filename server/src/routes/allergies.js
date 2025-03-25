@@ -24,7 +24,7 @@ router.get('/:id', async (req, res) => {
 })
 
 // Get allergies by userId
-router.get('/:id', async (req, res) => {
+router.get('/user/:id', async (req, res) => {
     try{
         const userAllergies = await allergiesController.getUserAllergies(req.params.id)
         res.status(200).send(userAllergies)
