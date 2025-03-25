@@ -7,6 +7,7 @@ const allergiesRoutes = require('./routes/allergies');
 const dietaryRestrictionsRoutes = require('./routes/dietary_restrictions');
 const mealHistoryRoutes = require('./routes/meal_history');
 const mealPlanRoutes = require('./routes/meal_plan');
+const categoriesRoutes = require('./routes/categories');
 
 const app = express();
 
@@ -25,5 +26,6 @@ app.use('/api/allergies', allergiesRoutes);
 app.use('/api/dietary_restrictions', dietaryRestrictionsRoutes);
 app.use('/api/meal_history', mealHistoryRoutes);
 app.use('/api/meal_plan', mealPlanRoutes);
+app.use('/api/categories', categoriesRoutes)
 
 module.exports = app;
