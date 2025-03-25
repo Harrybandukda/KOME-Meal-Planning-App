@@ -48,7 +48,7 @@ export default function OnboardingStep2() {
   }
 
   const updateProfile = async () => {
-    sendRequest(`/api/user/${userId}`, "POST", { weight: weightKg, gender, goal })
+    sendRequest(`/api/user/${userId}`, "PUT", { weight: weightKg, gender, goal })
       .then(() => {
         router.push("/onboarding/step3");
       });

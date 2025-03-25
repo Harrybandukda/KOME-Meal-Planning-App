@@ -1,18 +1,31 @@
 "use client"
 
-import { useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import { NavBar } from "@/components/nav-bar"
 import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Label } from "@/components/ui/label"
 import { useRouter } from "next/navigation"
 import { AlertCircle } from 'lucide-react'
+import { AppContext } from "../app-provider"
 
-export default function OnboardingStep3() {
+export default function OnboardingPage() {
   const router = useRouter()
   const [acceptTerms, setAcceptTerms] = useState(false)
   const [acceptPrivacy, setAcceptPrivacy] = useState(false)
   const [showError, setShowError] = useState(false)
+  const { isLoading, userId } = useContext(AppContext);
+  
+  // Authentication check
+  useEffect(() => {
+    if (!userId) {
+      if (!isLoading) {
+        console.error("User ID not found, redirect to sign up");
+        router.push("/signup");
+      }
+      return;
+    }
+  }, [userId, isLoading, router]);
 
   const handleFinish = () => {
     if (acceptTerms && acceptPrivacy) {
