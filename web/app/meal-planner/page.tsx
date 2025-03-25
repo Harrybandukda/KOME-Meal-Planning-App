@@ -29,110 +29,6 @@ const weekdays = [
   { name: "Sunday", short: "Sun" },
 ]
 
-const mockMeals = {
-  breakfast: {
-    id: 1,
-    name: "Greek Yogurt Bowl",
-    type: "breakfast",
-    ingredients: [
-      { name: "Greek Yogurt", amount: "1", unit: "Cup" },
-      { name: "Mixed Berries", amount: "1/2", unit: "Cup" },
-      { name: "Honey", amount: "1", unit: "tbsp" },
-      { name: "Granola", amount: "1/4", unit: "Cup" },
-    ],
-    cookware: [
-      { name: "Mixing Bowl" },
-      { name: "Measuring Cups" },
-      { name: "Spoon" },
-    ],
-    instructions: [
-      { step: 1, text: "Add Greek yogurt to a bowl." },
-      { step: 2, text: "Top with mixed berries." },
-      { step: 3, text: "Drizzle with honey." },
-      { step: 4, text: "Sprinkle granola on top." },
-    ],
-    nutrition: {
-      calories: "240k",
-      carbs: "60g",
-      fat: "11g",
-      protein: "19g",
-      fiber: "13g",
-      sodium: "210mg",
-      cholesterol: "0mg",
-    },
-    neededIngredients: 3,
-    image: "/placeholder.svg?height=200&width=200",
-  },
-  lunch: {
-    id: 2,
-    name: "Quinoa Bowl",
-    type: "lunch",
-    ingredients: [
-      { name: "Quinoa", amount: "1", unit: "Cup" },
-      { name: "Mixed Vegetables", amount: "1", unit: "Cup" },
-      { name: "Olive Oil", amount: "1", unit: "tbsp" },
-      { name: "Lemon Juice", amount: "1", unit: "tbsp" },
-      { name: "Salt", amount: "1/4", unit: "tsp" },
-    ],
-    cookware: [
-      { name: "Mixing Bowl" },
-      { name: "Measuring Cups" },
-      { name: "Spoon" },
-    ],
-    instructions: [
-      { step: 1, text: "Rinse quinoa thoroughly." },
-      { step: 2, text: "Cook quinoa according to package instructions." },
-      { step: 3, text: "Mix with vegetables and seasonings." },
-      { step: 4, text: "Serve hot or cold." },
-    ],
-    nutrition: {
-      calories: "320k",
-      carbs: "45g",
-      fat: "14g",
-      protein: "12g",
-      fiber: "8g",
-      sodium: "180mg",
-      cholesterol: "0mg",
-    },
-    neededIngredients: 6,
-    image: "/placeholder.svg?height=200&width=200",
-  },
-  dinner: {
-    id: 3,
-    name: "Grilled Salmon",
-    type: "dinner",
-    ingredients: [
-      { name: "Salmon Fillet", amount: "6", unit: "oz" },
-      { name: "Olive Oil", amount: "1", unit: "tbsp" },
-      { name: "Lemon", amount: "1/2", unit: "" },
-      { name: "Garlic", amount: "2", unit: "cloves" },
-    ],
-    cookware: [
-      { name: "Mixing Bowl" },
-      { name: "Measuring Cups" },
-      { name: "Spoon" },
-    ],
-    instructions: [
-      { step: 1, text: "Preheat grill to medium-high heat." },
-      { step: 2, text: "Brush salmon with olive oil." },
-      { step: 3, text: "Season with minced garlic." },
-      { step: 4, text: "Grill for 4-5 minutes per side." },
-      { step: 5, text: "Squeeze lemon over salmon before serving." },
-    ],
-    nutrition: {
-      calories: "350k",
-      carbs: "2g",
-      fat: "22g",
-      protein: "34g",
-      fiber: "0g",
-      sodium: "125mg",
-      cholesterol: "95mg",
-    },
-    neededIngredients: 4,
-    image: "/placeholder.svg?height=200&width=200",
-  },
-}
-
 export default function MealPlanner() {
   const [activeWeek, setActiveWeek] = useState(1)
   const [activeDay, setActiveDay] = useState(2)
@@ -270,7 +166,7 @@ export default function MealPlanner() {
               <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
                 <h3 className="text-[22px] font-bold mb-6">Nutrition Facts</h3>
                 <div className="space-y-4">
-                  {Object.entries(mockMeals[selectedMeal as keyof typeof mockMeals].nutrition).map(([key, value]) => (
+                  {(selectedMeal in currentPlan) && Object.entries(currentPlan[selectedMeal as keyof typeof currentPlan].nutrition).map(([key, value]: [string, any]) => (
                     <div key={key} className="flex justify-between items-center">
                       <span className="capitalize text-gray-600 text-base">{key}</span>
                       <div className="flex-1 mx-4">
@@ -290,86 +186,88 @@ export default function MealPlanner() {
           </div>
 
           {/* Recipe Details */}
-          <div className="mt-8">
-            <h2 className="text-[32px] font-bold mb-6">{mockMeals[selectedMeal as keyof typeof mockMeals].name}</h2>
+          {selectedMeal in currentPlan && (
+            <div className="mt-8">
+              <h2 className="text-[32px] font-bold mb-6">{currentPlan[selectedMeal as keyof typeof currentPlan].name}</h2>
 
-            <div className="mb-6">
-              <Tabs defaultValue="ingredients" className="w-full">
-                <TabsList className="w-full mb-6 grid grid-cols-3 p-1 bg-transparent gap-4">
-                  <TabsTrigger 
-                    value="cookware" 
-                    className="data-[state=active]:bg-[#42B5E7] data-[state=active]:text-white rounded-full py-2.5 text-base font-medium"
-                  >
-                    Cookware
-                  </TabsTrigger>
-                  <TabsTrigger 
-                    value="ingredients" 
-                    className="data-[state=active]:bg-[#42B5E7] data-[state=active]:text-white rounded-full py-2.5 text-base font-medium"
-                  >
-                    Ingredients
-                  </TabsTrigger>
-                  <TabsTrigger 
-                    value="instructions" 
-                    className="data-[state=active]:bg-[#42B5E7] data-[state=active]:text-white rounded-full py-2.5 text-base font-medium"
-                  >
-                    Instructions
-                  </TabsTrigger>
-                </TabsList>
+              <div className="mb-6">
+                <Tabs defaultValue="ingredients" className="w-full">
+                  <TabsList className="w-full mb-6 grid grid-cols-3 p-1 bg-transparent gap-4">
+                    <TabsTrigger 
+                      value="cookware" 
+                      className="data-[state=active]:bg-[#42B5E7] data-[state=active]:text-white rounded-full py-2.5 text-base font-medium"
+                    >
+                      Cookware
+                    </TabsTrigger>
+                    <TabsTrigger 
+                      value="ingredients" 
+                      className="data-[state=active]:bg-[#42B5E7] data-[state=active]:text-white rounded-full py-2.5 text-base font-medium"
+                    >
+                      Ingredients
+                    </TabsTrigger>
+                    <TabsTrigger 
+                      value="instructions" 
+                      className="data-[state=active]:bg-[#42B5E7] data-[state=active]:text-white rounded-full py-2.5 text-base font-medium"
+                    >
+                      Instructions
+                    </TabsTrigger>
+                  </TabsList>
 
-                <TabsContent value="ingredients" className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
-                  <div className="space-y-6">
-                    {mockMeals[selectedMeal as keyof typeof mockMeals].ingredients.map((ingredient, index) => (
-                      <div key={index} className="flex items-center gap-4">
-                        <div className="w-5 h-5 rounded-full border-2 border-gray-300 flex items-center justify-center">
-                          <div className="w-2.5 h-2.5 rounded-full bg-[#42B5E7]" />
+                  <TabsContent value="ingredients" className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
+                    <div className="space-y-6">
+                      {currentPlan[selectedMeal as keyof typeof currentPlan].ingredients.map((ingredient: any, index: number) => (
+                        <div key={index} className="flex items-center gap-4">
+                          <div className="w-5 h-5 rounded-full border-2 border-gray-300 flex items-center justify-center">
+                            <div className="w-2.5 h-2.5 rounded-full bg-[#42B5E7]" />
+                          </div>
+                          <span className="text-lg">
+                            {ingredient.amount} {ingredient.unit} {ingredient.name}
+                          </span>
                         </div>
-                        <span className="text-lg">
-                          {ingredient.amount} {ingredient.unit} {ingredient.name}
-                        </span>
+                      ))}
+                      <div className="pt-6 mt-6 border-t border-gray-100 text-sm text-gray-400 uppercase">
+                        KOME LOVE
                       </div>
-                    ))}
-                    <div className="pt-6 mt-6 border-t border-gray-100 text-sm text-gray-400 uppercase">
-                      KOME LOVE
                     </div>
-                  </div>
-                </TabsContent>
+                  </TabsContent>
 
-                <TabsContent value="cookware" className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
-                  <div className="space-y-6">
-                    {mockMeals[selectedMeal as keyof typeof mockMeals].cookware.map((item, index) => (
-                      <div key={index} className="flex items-center gap-4">
-                        <div className="w-5 h-5 rounded-full border-2 border-gray-300 flex items-center justify-center">
-                          <div className="w-2.5 h-2.5 rounded-full bg-[#42B5E7]" />
+                  <TabsContent value="cookware" className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
+                    <div className="space-y-6">
+                      {currentPlan[selectedMeal as keyof typeof currentPlan].cookware.map((name: string, index: number) => (
+                        <div key={index} className="flex items-center gap-4">
+                          <div className="w-5 h-5 rounded-full border-2 border-gray-300 flex items-center justify-center">
+                            <div className="w-2.5 h-2.5 rounded-full bg-[#42B5E7]" />
+                          </div>
+                          <span className="text-lg">{name}</span>
                         </div>
-                        <span className="text-lg">{item.name}</span>
+                      ))}
+                      <div className="pt-6 mt-6 border-t border-gray-100 text-sm text-gray-400 uppercase">
+                        KOME LOVE
                       </div>
-                    ))}
-                    <div className="pt-6 mt-6 border-t border-gray-100 text-sm text-gray-400 uppercase">
-                      KOME LOVE
                     </div>
-                  </div>
-                </TabsContent>
+                  </TabsContent>
 
-                <TabsContent value="instructions" className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
-                  <div className="space-y-6">
-                    {mockMeals[selectedMeal as keyof typeof mockMeals].instructions.map((instruction) => (
-                      <div key={instruction.step} className="flex items-start gap-4">
-                        <div className="w-6 h-6 rounded-full bg-[#42B5E7] text-white flex items-center justify-center flex-shrink-0 mt-0.5 text-sm font-medium">
-                          {instruction.step}
+                  <TabsContent value="instructions" className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
+                    <div className="space-y-6">
+                      {currentPlan[selectedMeal as keyof typeof currentPlan].instructions.map((instruction: any) => (
+                        <div key={instruction.step} className="flex items-start gap-4">
+                          <div className="w-6 h-6 rounded-full bg-[#42B5E7] text-white flex items-center justify-center flex-shrink-0 mt-0.5 text-sm font-medium">
+                            {instruction.step + 1}
+                          </div>
+                          <span className="text-lg">
+                            {instruction.text}
+                          </span>
                         </div>
-                        <span className="text-lg">
-                          {instruction.text}
-                        </span>
+                      ))}
+                      <div className="pt-6 mt-6 border-t border-gray-100 text-sm text-gray-400 uppercase">
+                        KOME LOVE
                       </div>
-                    ))}
-                    <div className="pt-6 mt-6 border-t border-gray-100 text-sm text-gray-400 uppercase">
-                      KOME LOVE
                     </div>
-                  </div>
-                </TabsContent>
-              </Tabs>
+                  </TabsContent>
+                </Tabs>
+              </div>
             </div>
-          </div>
+          )}
         </div>
       </div>
     </div>

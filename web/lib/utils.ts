@@ -48,9 +48,16 @@ export async function loadMealRecipe (recipeId: string) {
     title: data.name,
     image: data.link,
     description: data.description,
-    cookware: [],
-    ingredients: [],
-    instructions: data.instructions.split('. '),
+    cookware: [ "Mixing Bowl", "Measuring Cups", "Spoon" ],
+    ingredients: [
+      { name: "Salmon Fillet", amount: "6", unit: "oz" },
+      { name: "Olive Oil", amount: "1", unit: "tbsp" },
+      { name: "Lemon", amount: "1/2", unit: "" },
+      { name: "Garlic", amount: "2", unit: "cloves" },
+    ],
+    instructions: data.instructions.split('. ').map((text: string, step: number) => {
+      return { step, text }; 
+    }),
     nutrition: {
       calories: 320,
       carbs: 60,
