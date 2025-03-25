@@ -30,21 +30,20 @@ cd Capstone-COMP3078-WebApp
 
 ### 2. Create a .env file
 In the root directory, create a .env file and add the following environment variables:
-
+```
 NEXT_PUBLIC_ENV=development
-
 NEXT_PUBLIC_SERVER_URL=https://kome.my
-
 PORT=3000
+```
 
 ### 3. Start the app using Docker Compose
-docker compose up
+```docker compose up```
 
 This command will:
 
-Spin up the frontend, backend, and PostgreSQL database as separate Docker containers
+- Spin up the frontend, backend, and PostgreSQL database as separate Docker containers
 
-Automatically install all dependencies and initialize the services
+- Automatically install all dependencies and initialize the services
 
 ### 4. Access the app
 Once the containers are running, open your browser and navigate to:
