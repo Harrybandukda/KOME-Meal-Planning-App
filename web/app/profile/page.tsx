@@ -41,32 +41,7 @@ export default function Profile() {
 
         fetchData()
     }, [userId, isLoading, router]);
-
-    // const handleAvatarChange = async (event) => {
-    //     const file = event.target.files[0];
-    //     if (file) {
-    //         const formData = new FormData();
-    //         formData.append("avatar", file);
-
-    //         try {
-    //         // Send the file to the server
-    //         const response = await fetch("/api/upload-avatar", {
-    //             method: "POST",
-    //             body: formData,
-    //         });
-    //         const data = await response.json();
-
-    //         // Save the new avatar URL from the response
-    //         if (data.avatarUrl) {
-    //             setAvatar(data.avatarUrl);  // Update the avatar on the profile page
-    //             localStorage.setItem("avatarUrl", data.avatarUrl);  // Store it in localStorage for persistence
-    //         }
-    //         } catch (error) {
-    //         console.error("Failed to upload avatar", error);
-    //         }
-    //     }
-    // };
-    
+ 
 
     return (
         <div className="min-h-screen bg-white font-quicksand">
