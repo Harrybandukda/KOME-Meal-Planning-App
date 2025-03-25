@@ -16,7 +16,7 @@ A full-stack web application built with React, Node.js, Express, PostgreSQL, and
 ## 🚀 **Live Demo**
 You can check out the deployed version of our project by clicking the link below:
 
-[👉 **Live Project on OVH Server](https://kome.my/**)
+[👉 Live Project on OVH Server](https://kome.my/)
 
 ---
 ## 🛠️ **Running the Project Locally**
