@@ -10,10 +10,6 @@ import { AppContext } from "../app-provider"
 import { sendRequest } from "@/lib/utils"
 import { useRouter } from "next/navigation"
 
-const formatDate = (date: Date): string => {
-    return date.toISOString().split("T")[0]
-}
-
 export default function Profile() {
     const { isLoading, userId, userName } = useContext(AppContext);
     // const [avatar, setAvatar] = useState("/default-avatar.jpg");
