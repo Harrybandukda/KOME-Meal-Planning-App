@@ -1,12 +1,14 @@
 "use client"
 
-import { useState } from "react"
+import { useContext, useState } from "react"
 import { NavBar } from "@/components/nav-bar"
 import { Button } from "@/components/ui/button"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Label } from "@/components/ui/label"
 import { Slider } from "@/components/ui/slider"
 import { useRouter } from "next/navigation"
+import { sendRequest } from "@/lib/utils"
+import { AppContext } from "../app-provider"
 
 const KG_TO_LBS = 2.20462
 const KG_RANGE = { min: 40, max: 140 }
@@ -21,6 +23,7 @@ export default function OnboardingPage() {
   const [weightKg, setWeightKg] = useState(70)
   const [gender, setGender] = useState("female")
   const [goal, setGoal] = useState("lose")
+  const { userId } = useContext(AppContext);
 
   // Derived state for display
   const weightLbs = Math.round(weightKg * KG_TO_LBS)
@@ -43,6 +46,13 @@ export default function OnboardingPage() {
       setWeightKg(Math.round(value[0] / KG_TO_LBS))
     }
   }
+
+  const updateProfile = async () => {
+    sendRequest(`/api/user/${userId}`, "POST", { weight: weightKg, gender, goal })
+      .then((data: any) => {
+        router.push("/onboarding/step2");
+      });
+  };
 
   // Calculate slider markers
   const markers = Array.from({ length: 6 }, (_, i) => {
@@ -218,7 +228,7 @@ export default function OnboardingPage() {
           {/* Continue Button */}
           <div className="flex justify-center">
             <Button
-              onClick={() => router.push("/onboarding/step2")}
+              onClick={updateProfile}
               className="w-full max-w-md bg-[#42B5E7] text-white hover:bg-[#3AA1D1] rounded-full h-12"
             >
               CONTINUE
