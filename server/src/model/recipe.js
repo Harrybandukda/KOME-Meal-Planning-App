@@ -14,7 +14,7 @@ module.exports = (sequelize) => {
     },
 
     author: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.STRING,
         allowNull: true
     },
 
