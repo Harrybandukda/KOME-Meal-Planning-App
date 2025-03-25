@@ -1,68 +1,70 @@
 "use client"
 
-import { useState } from "react"
+import { useContext, useState } from "react"
 import { NavBar } from "@/components/nav-bar"
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
+import { Label } from "@/components/ui/label"
+import { Slider } from "@/components/ui/slider"
 import { useRouter } from "next/navigation"
-import { Search, Check } from 'lucide-react'
+import { sendRequest } from "@/lib/utils"
+import { AppContext } from "../../app-provider"
 
-interface PreferenceOption {
-  id: string
-  label: string
+const KG_TO_LBS = 2.20462
+const KG_RANGE = { min: 40, max: 140 }
+const LBS_RANGE = {
+  min: Math.round(KG_RANGE.min * KG_TO_LBS),
+  max: Math.round(KG_RANGE.max * KG_TO_LBS),
 }
-
-const dietaryPreferences: PreferenceOption[] = [
-  { id: "vegetarian", label: "Vegetarian Diet" },
-  { id: "vegan", label: "Vegan Diet" },
-  { id: "halal", label: "Halal Diet" },
-  { id: "gluten-free", label: "Gluten-Free Diet" },
-  { id: "keto", label: "Keto Diet" },
-  { id: "paleo", label: "Paleo Diet" },
-]
-
-const allergyOptions: PreferenceOption[] = [
-  { id: "nut", label: "Nut Allergy" },
-  { id: "lactose", label: "Lactose Intolerant" },
-  { id: "soy", label: "Soy Allergy" },
-  { id: "gluten", label: "Gluten Allergy" },
-  { id: "egg", label: "Egg Allergy" },
-  { id: "shellfish", label: "Shellfish Allergy" },
-  { id: "fish", label: "Fish Allergy" },
-]
 
 export default function OnboardingStep2() {
   const router = useRouter()
-  const [selectedDiets, setSelectedDiets] = useState<string[]>(["halal", "gluten-free"])
-  const [selectedAllergies, setSelectedAllergies] = useState<string[]>(["soy", "gluten"])
-  const [dietarySearch, setDietarySearch] = useState("")
-  const [allergySearch, setAllergySearch] = useState("")
+  const [unit, setUnit] = useState<"kg" | "lbs">("kg")
+  const [weightKg, setWeightKg] = useState(70)
+  const [gender, setGender] = useState("female")
+  const [goal, setGoal] = useState("lose")
+  const { userId } = useContext(AppContext);
 
-  const toggleDiet = (dietId: string) => {
-    setSelectedDiets(prev =>
-      prev.includes(dietId) ? prev.filter(id => id !== dietId) : [...prev, dietId]
-    )
+  // Derived state for display
+  const weightLbs = Math.round(weightKg * KG_TO_LBS)
+  const displayWeight = unit === "kg" ? weightKg : weightLbs
+  const range = unit === "kg" ? KG_RANGE : LBS_RANGE
+
+  // Calculate percentage for slider background
+  const percentage = ((displayWeight - range.min) / (range.max - range.min)) * 100
+
+  // Handle unit toggle
+  const toggleUnit = (newUnit: "kg" | "lbs") => {
+    setUnit(newUnit)
   }
 
-  const toggleAllergy = (allergyId: string) => {
-    setSelectedAllergies(prev =>
-      prev.includes(allergyId) ? prev.filter(id => id !== allergyId) : [...prev, allergyId]
-    )
+  // Handle slider change
+  const handleSliderChange = (value: number[]) => {
+    if (unit === "kg") {
+      setWeightKg(value[0])
+    } else {
+      setWeightKg(Math.round(value[0] / KG_TO_LBS))
+    }
   }
 
-  const filteredDiets = dietaryPreferences.filter(diet =>
-    diet.label.toLowerCase().includes(dietarySearch.toLowerCase())
-  )
+  const updateProfile = async () => {
+    sendRequest(`/api/user/${userId}`, "POST", { weight: weightKg, gender, goal })
+      .then(() => {
+        router.push("/onboarding/step3");
+      });
+  };
 
-  const filteredAllergies = allergyOptions.filter(allergy =>
-    allergy.label.toLowerCase().includes(allergySearch.toLowerCase())
-  )
+  // Calculate slider markers
+  const markers = Array.from({ length: 6 }, (_, i) => {
+    const value = Math.round(range.min + (i * (range.max - range.min)) / 5)
+    return value
+  })
 
   return (
     <main className="min-h-screen bg-white font-quicksand">
       <NavBar />
 
-      <div className="max-w-4xl mx-auto px-4 py-12">
+      <div className="max-w-2xl mx-auto px-4 py-12">
         <div className="space-y-12">
           {/* Progress Indicator */}
           <div className="flex flex-col items-center space-y-6">
@@ -85,91 +87,149 @@ export default function OnboardingStep2() {
             </div>
           </div>
 
-          {/* Dietary Preferences Section */}
+          {/* Weight Input */}
           <div className="space-y-6">
-            <div>
-              <h2 className="text-2xl font-semibold">Dietary Preferences</h2>
-              <p className="text-gray-600 mt-1">We're all ears! Let us know your dietary preferences.</p>
-            </div>
+            <h2 className="text-2xl font-semibold text-center">What's your current weight right now?</h2>
 
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
-              <Input
-                type="text"
-                placeholder="Search"
-                value={dietarySearch}
-                onChange={(e) => setDietarySearch(e.target.value)}
-                className="pl-10 rounded-lg border-gray-200"
-              />
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              {filteredDiets.map((diet) => (
+            <div className="flex justify-center">
+              <div className="inline-flex rounded-md">
                 <button
-                  key={diet.id}
-                  onClick={() => toggleDiet(diet.id)}
-                  className={`flex items-center justify-between p-4 rounded-lg border transition-all ${
-                    selectedDiets.includes(diet.id)
-                      ? "border-[#42B5E7] bg-blue-50 shadow-sm"
-                      : "border-gray-200 hover:border-gray-300 hover:bg-gray-50"
+                  onClick={() => toggleUnit("kg")}
+                  className={`px-8 py-2 rounded-l-md border border-r-0 transition-colors ${
+                    unit === "kg"
+                      ? "bg-[#42B5E7] text-white border-[#42B5E7]"
+                      : "bg-white text-gray-700 border-gray-200 hover:bg-gray-50"
                   }`}
                 >
-                  <span className="text-left font-medium">{diet.label}</span>
-                  {selectedDiets.includes(diet.id) && (
-                    <div className="w-6 h-6 rounded-full bg-[#42B5E7] flex items-center justify-center">
-                      <Check className="w-4 h-4 text-white" />
-                    </div>
-                  )}
+                  Kg
                 </button>
-              ))}
+                <button
+                  onClick={() => toggleUnit("lbs")}
+                  className={`px-8 py-2 rounded-r-md border border-l-0 transition-colors ${
+                    unit === "lbs"
+                      ? "bg-[#42B5E7] text-white border-[#42B5E7]"
+                      : "bg-white text-gray-700 border-gray-200 hover:bg-gray-50"
+                  }`}
+                >
+                  Lbs
+                </button>
+              </div>
+            </div>
+
+            <div className="space-y-4 px-4">
+              <div className="relative pt-2 pb-8">
+                <div
+                  className="absolute h-2 bg-[#42B5E7] rounded-full"
+                  style={{
+                    width: `${percentage}%`,
+                    left: 0,
+                    top: '0.5rem'
+                  }}
+                />
+                <div className="absolute h-2 bg-gray-200 rounded-full right-0" style={{ width: `${100 - percentage}%`, left: `${percentage}%`, top: '0.5rem' }} />
+                <Slider
+                  value={[displayWeight]}
+                  onValueChange={handleSliderChange}
+                  min={range.min}
+                  max={range.max}
+                  step={1}
+                  className="relative z-10"
+                />
+                <div className="flex justify-between text-sm text-gray-500 mt-6">
+                  {markers.map((value, i) => (
+                    <span key={i} className="absolute" style={{ left: `${(i * 100) / 5}%`, transform: 'translateX(-50%)' }}>
+                      {value}
+                    </span>
+                  ))}
+                </div>
+              </div>
+              <div className="text-center mt-8">
+                <span className="text-4xl font-bold text-[#42B5E7]">
+                  {displayWeight} {unit}
+                </span>
+              </div>
             </div>
           </div>
 
-          {/* Allergies Section */}
+          {/* Gender Selection */}
           <div className="space-y-6">
-            <div>
-              <h2 className="text-2xl font-semibold">Allergies & Restriction</h2>
-              <p className="text-gray-600 mt-1">Your safety is our secret ingredient! What should we avoid?</p>
-            </div>
+            <h2 className="text-2xl font-semibold text-center">What's your gender?</h2>
+            <RadioGroup value={gender} onValueChange={setGender} className="flex justify-center gap-6">
+              <div className="flex items-center gap-2">
+                <RadioGroupItem
+                  value="male"
+                  id="male"
+                  className="border-2 border-gray-300 data-[state=checked]:border-[#42B5E7] data-[state=checked]:bg-[#42B5E7]"
+                />
+                <Label htmlFor="male" className="text-base">
+                  Male
+                </Label>
+              </div>
+              <div className="flex items-center gap-2">
+                <RadioGroupItem
+                  value="female"
+                  id="female"
+                  className="border-2 border-gray-300 data-[state=checked]:border-[#42B5E7] data-[state=checked]:bg-[#42B5E7]"
+                />
+                <Label htmlFor="female" className="text-base">
+                  Female
+                </Label>
+              </div>
+              <div className="flex items-center gap-2">
+                <RadioGroupItem
+                  value="other"
+                  id="other"
+                  className="border-2 border-gray-300 data-[state=checked]:border-[#42B5E7] data-[state=checked]:bg-[#42B5E7]"
+                />
+                <Label htmlFor="other" className="text-base">
+                  Other
+                </Label>
+              </div>
+            </RadioGroup>
+          </div>
 
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
-              <Input
-                type="text"
-                placeholder="Search"
-                value={allergySearch}
-                onChange={(e) => setAllergySearch(e.target.value)}
-                className="pl-10 rounded-lg border-gray-200"
-              />
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              {filteredAllergies.map((allergy) => (
-                <button
-                  key={allergy.id}
-                  onClick={() => toggleAllergy(allergy.id)}
-                  className={`flex items-center justify-between p-4 rounded-lg border transition-all ${
-                    selectedAllergies.includes(allergy.id)
-                      ? "border-[#42B5E7] bg-blue-50 shadow-sm"
-                      : "border-gray-200 hover:border-gray-300 hover:bg-gray-50"
-                  }`}
-                >
-                  <span className="text-left font-medium">{allergy.label}</span>
-                  {selectedAllergies.includes(allergy.id) && (
-                    <div className="w-6 h-6 rounded-full bg-[#42B5E7] flex items-center justify-center">
-                      <Check className="w-4 h-4 text-white" />
-                    </div>
-                  )}
-                </button>
-              ))}
-            </div>
+          {/* Goal Selection */}
+          <div className="space-y-6">
+            <h2 className="text-2xl font-semibold text-center">What goal do you have in mind?</h2>
+            <RadioGroup value={goal} onValueChange={setGoal} className="flex justify-center gap-6">
+              <div className="flex items-center gap-2">
+                <RadioGroupItem
+                  value="lose"
+                  id="lose"
+                  className="border-2 border-gray-300 data-[state=checked]:border-[#42B5E7] data-[state=checked]:bg-[#42B5E7]"
+                />
+                <Label htmlFor="lose" className="text-base">
+                  Lose Weight
+                </Label>
+              </div>
+              <div className="flex items-center gap-2">
+                <RadioGroupItem
+                  value="maintain"
+                  id="maintain"
+                  className="border-2 border-gray-300 data-[state=checked]:border-[#42B5E7] data-[state=checked]:bg-[#42B5E7]"
+                />
+                <Label htmlFor="maintain" className="text-base">
+                  Maintain Weight
+                </Label>
+              </div>
+              <div className="flex items-center gap-2">
+                <RadioGroupItem
+                  value="gain"
+                  id="gain"
+                  className="border-2 border-gray-300 data-[state=checked]:border-[#42B5E7] data-[state=checked]:bg-[#42B5E7]"
+                />
+                <Label htmlFor="gain" className="text-base">
+                  Gain Weight
+                </Label>
+              </div>
+            </RadioGroup>
           </div>
 
           {/* Continue Button */}
-          <div className="flex justify-center pt-6">
+          <div className="flex justify-center">
             <Button
-              onClick={() => router.push("/onboarding/step3")}
-              className="w-full max-w-md bg-[#42B5E7] text-white hover:bg-[#3AA1D1] rounded-full h-12 font-medium"
+              onClick={updateProfile}
+              className="w-full max-w-md bg-[#42B5E7] text-white hover:bg-[#3AA1D1] rounded-full h-12"
             >
               CONTINUE
             </Button>
