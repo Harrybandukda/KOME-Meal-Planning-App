@@ -3,27 +3,60 @@
 import { useState } from "react"
 import { NavBar } from "@/components/nav-bar"
 import { Button } from "@/components/ui/button"
-import { Checkbox } from "@/components/ui/checkbox"
-import { Label } from "@/components/ui/label"
+import { Input } from "@/components/ui/input"
 import { useRouter } from "next/navigation"
-import { AlertCircle } from 'lucide-react'
+import { Search, Check } from 'lucide-react'
+
+interface PreferenceOption {
+  id: string
+  label: string
+}
+
+const dietaryPreferences: PreferenceOption[] = [
+  { id: "vegetarian", label: "Vegetarian Diet" },
+  { id: "vegan", label: "Vegan Diet" },
+  { id: "halal", label: "Halal Diet" },
+  { id: "gluten-free", label: "Gluten-Free Diet" },
+  { id: "keto", label: "Keto Diet" },
+  { id: "paleo", label: "Paleo Diet" },
+]
+
+const allergyOptions: PreferenceOption[] = [
+  { id: "nut", label: "Nut Allergy" },
+  { id: "lactose", label: "Lactose Intolerant" },
+  { id: "soy", label: "Soy Allergy" },
+  { id: "gluten", label: "Gluten Allergy" },
+  { id: "egg", label: "Egg Allergy" },
+  { id: "shellfish", label: "Shellfish Allergy" },
+  { id: "fish", label: "Fish Allergy" },
+]
 
 export default function OnboardingStep3() {
   const router = useRouter()
-  const [acceptTerms, setAcceptTerms] = useState(false)
-  const [acceptPrivacy, setAcceptPrivacy] = useState(false)
-  const [showError, setShowError] = useState(false)
+  const [selectedDiets, setSelectedDiets] = useState<string[]>(["halal", "gluten-free"])
+  const [selectedAllergies, setSelectedAllergies] = useState<string[]>(["soy", "gluten"])
+  const [dietarySearch, setDietarySearch] = useState("")
+  const [allergySearch, setAllergySearch] = useState("")
 
-  const handleFinish = () => {
-    if (acceptTerms && acceptPrivacy) {
-      // Redirect to dashboard
-      router.push("/dashboard")
-    } else {
-      setShowError(true)
-      // Auto-hide error after 3 seconds
-      setTimeout(() => setShowError(false), 3000)
-    }
+  const toggleDiet = (dietId: string) => {
+    setSelectedDiets(prev =>
+      prev.includes(dietId) ? prev.filter(id => id !== dietId) : [...prev, dietId]
+    )
   }
+
+  const toggleAllergy = (allergyId: string) => {
+    setSelectedAllergies(prev =>
+      prev.includes(allergyId) ? prev.filter(id => id !== allergyId) : [...prev, allergyId]
+    )
+  }
+
+  const filteredDiets = dietaryPreferences.filter(diet =>
+    diet.label.toLowerCase().includes(dietarySearch.toLowerCase())
+  )
+
+  const filteredAllergies = allergyOptions.filter(allergy =>
+    allergy.label.toLowerCase().includes(allergySearch.toLowerCase())
+  )
 
   return (
     <main className="min-h-screen bg-white font-quicksand">
@@ -52,105 +85,93 @@ export default function OnboardingStep3() {
             </div>
           </div>
 
-          {/* Terms and Conditions Section */}
+          {/* Dietary Preferences Section */}
           <div className="space-y-6">
             <div>
-              <h2 className="text-2xl font-semibold">Terms & Conditions</h2>
-              <p className="text-gray-600 mt-1">Please review and accept our terms and privacy policy.</p>
+              <h2 className="text-2xl font-semibold">Dietary Preferences</h2>
+              <p className="text-gray-600 mt-1">We're all ears! Let us know your dietary preferences.</p>
             </div>
 
-            <div className="bg-gray-50 border border-gray-200 rounded-lg p-6">
-              <div className="h-64 overflow-y-auto pr-4 mb-6 text-gray-700">
-                <h3 className="font-semibold text-lg mb-3">KOME Terms of Service</h3>
-                
-                <p className="mb-4">
-                  Welcome to KOME! These Terms of Service ("Terms") govern your use of our website, mobile application, and services (collectively, the "Service"). By accessing or using our Service, you agree to be bound by these Terms.
-                </p>
-                
-                <h4 className="font-semibold mt-4 mb-2">1. Acceptance of Terms</h4>
-                <p className="mb-4">
-                  By accessing or using the Service, you agree to be bound by these Terms. If you disagree with any part of the terms, you may not access the Service.
-                </p>
-                
-                <h4 className="font-semibold mt-4 mb-2">2. Description of Service</h4>
-                <p className="mb-4">
-                  KOME provides a platform for users to discover, save, and plan meals based on their dietary preferences and restrictions. We offer personalized meal recommendations, nutritional information, and meal planning tools.
-                </p>
-                
-                <h4 className="font-semibold mt-4 mb-2">3. User Accounts</h4>
-                <p className="mb-4">
-                  To access certain features of the Service, you may be required to create an account. You are responsible for maintaining the confidentiality of your account information and for all activities that occur under your account.
-                </p>
-                
-                <h4 className="font-semibold mt-4 mb-2">4. User Content</h4>
-                <p className="mb-4">
-                  Our Service may allow you to post, link, store, share and otherwise make available certain information, text, graphics, videos, or other material. You retain any rights that you may have in such content.
-                </p>
-                
-                <h4 className="font-semibold mt-4 mb-2">5. Dietary Information Disclaimer</h4>
-                <p className="mb-4">
-                  While we strive to provide accurate dietary and nutritional information, we cannot guarantee that all information is complete or accurate. The Service is not intended to provide medical advice, and you should consult with healthcare professionals regarding specific dietary needs.
-                </p>
-                
-                <h4 className="font-semibold mt-4 mb-2">6. Privacy Policy</h4>
-                <p className="mb-4">
-                  Your privacy is important to us. Our Privacy Policy explains how we collect, use, and protect your personal information. By using our Service, you agree to our Privacy Policy.
-                </p>
-                
-                <h4 className="font-semibold mt-4 mb-2">7. Changes to Terms</h4>
-                <p className="mb-4">
-                  We reserve the right to modify or replace these Terms at any time. If a revision is material, we will provide at least 30 days' notice prior to any new terms taking effect.
-                </p>
-                
-                <h4 className="font-semibold mt-4 mb-2">8. Contact Us</h4>
-                <p className="mb-4">
-                  If you have any questions about these Terms, please contact us at support@kome.com.
-                </p>
-              </div>
-
-              <div className="space-y-4">
-                <div className="flex items-start space-x-3">
-                  <Checkbox 
-                    id="terms" 
-                    checked={acceptTerms} 
-                    onCheckedChange={(checked) => setAcceptTerms(checked === true)}
-                    className="mt-1 data-[state=checked]:bg-[#42B5E7] data-[state=checked]:border-[#42B5E7]"
-                  />
-                  <Label htmlFor="terms" className="text-sm">
-                    I have read and agree to the Terms of Service
-                  </Label>
-                </div>
-                
-                <div className="flex items-start space-x-3">
-                  <Checkbox 
-                    id="privacy" 
-                    checked={acceptPrivacy} 
-                    onCheckedChange={(checked) => setAcceptPrivacy(checked === true)}
-                    className="mt-1 data-[state=checked]:bg-[#42B5E7] data-[state=checked]:border-[#42B5E7]"
-                  />
-                  <Label htmlFor="privacy" className="text-sm">
-                    I have read and agree to the Privacy Policy and consent to the processing of my personal data
-                  </Label>
-                </div>
-              </div>
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
+              <Input
+                type="text"
+                placeholder="Search"
+                value={dietarySearch}
+                onChange={(e) => setDietarySearch(e.target.value)}
+                className="pl-10 rounded-lg border-gray-200"
+              />
             </div>
 
-            {/* Error message */}
-            {showError && (
-              <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg flex items-center gap-2">
-                <AlertCircle className="h-5 w-5" />
-                <span>Please accept both the Terms of Service and Privacy Policy to continue</span>
-              </div>
-            )}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              {filteredDiets.map((diet) => (
+                <button
+                  key={diet.id}
+                  onClick={() => toggleDiet(diet.id)}
+                  className={`flex items-center justify-between p-4 rounded-lg border transition-all ${
+                    selectedDiets.includes(diet.id)
+                      ? "border-[#42B5E7] bg-blue-50 shadow-sm"
+                      : "border-gray-200 hover:border-gray-300 hover:bg-gray-50"
+                  }`}
+                >
+                  <span className="text-left font-medium">{diet.label}</span>
+                  {selectedDiets.includes(diet.id) && (
+                    <div className="w-6 h-6 rounded-full bg-[#42B5E7] flex items-center justify-center">
+                      <Check className="w-4 h-4 text-white" />
+                    </div>
+                  )}
+                </button>
+              ))}
+            </div>
           </div>
 
-          {/* Finish Button */}
+          {/* Allergies Section */}
+          <div className="space-y-6">
+            <div>
+              <h2 className="text-2xl font-semibold">Allergies & Restriction</h2>
+              <p className="text-gray-600 mt-1">Your safety is our secret ingredient! What should we avoid?</p>
+            </div>
+
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
+              <Input
+                type="text"
+                placeholder="Search"
+                value={allergySearch}
+                onChange={(e) => setAllergySearch(e.target.value)}
+                className="pl-10 rounded-lg border-gray-200"
+              />
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              {filteredAllergies.map((allergy) => (
+                <button
+                  key={allergy.id}
+                  onClick={() => toggleAllergy(allergy.id)}
+                  className={`flex items-center justify-between p-4 rounded-lg border transition-all ${
+                    selectedAllergies.includes(allergy.id)
+                      ? "border-[#42B5E7] bg-blue-50 shadow-sm"
+                      : "border-gray-200 hover:border-gray-300 hover:bg-gray-50"
+                  }`}
+                >
+                  <span className="text-left font-medium">{allergy.label}</span>
+                  {selectedAllergies.includes(allergy.id) && (
+                    <div className="w-6 h-6 rounded-full bg-[#42B5E7] flex items-center justify-center">
+                      <Check className="w-4 h-4 text-white" />
+                    </div>
+                  )}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Continue Button */}
           <div className="flex justify-center pt-6">
             <Button
-              onClick={handleFinish}
+              onClick={() => router.push("/dashboard")}
               className="w-full max-w-md bg-[#42B5E7] text-white hover:bg-[#3AA1D1] rounded-full h-12 font-medium"
             >
-              FINISH
+              CONTINUE
             </Button>
           </div>
         </div>

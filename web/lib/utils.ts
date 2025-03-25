@@ -40,3 +40,42 @@ export function sendRequest<T>(url: string, method: string = 'GET', body: any = 
       console.error("Error during request: ", error);
     });
 }
+
+export async function loadMealRecipe (recipeId: string) {
+  const data = await sendRequest<any>(`/api/recipe/${recipeId}`);
+
+  return {
+    title: data.name,
+    image: data.link,
+    description: data.description,
+    cookware: [ "Mixing Bowl", "Measuring Cups", "Spoon" ],
+    ingredients: [
+      { name: "Salmon Fillet", amount: "6", unit: "oz" },
+      { name: "Olive Oil", amount: "1", unit: "tbsp" },
+      { name: "Lemon", amount: "1/2", unit: "" },
+      { name: "Garlic", amount: "2", unit: "cloves" },
+    ],
+    instructions: data.instructions.split('. ').map((text: string, step: number) => {
+      return { step, text }; 
+    }),
+    nutrition: {
+      calories: 320,
+      carbs: 60,
+      fat: 11,
+      protein: 19,
+      fiber: 5,
+      sodium: 210,
+      cholesterol: 0,
+    }
+  };
+};
+
+export async function mapMealPlan (mealPlan: any) {
+  const meal = {
+    breakfast: await loadMealRecipe(mealPlan.breakfast),
+    lunch: await loadMealRecipe(mealPlan.lunch),
+    dinner: await loadMealRecipe(mealPlan.dinner),
+  }
+
+  return meal;
+};

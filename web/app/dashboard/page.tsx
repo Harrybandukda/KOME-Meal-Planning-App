@@ -9,7 +9,7 @@ import Image from "next/image"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { AppContext } from "../app-provider"
-import { sendRequest } from "@/lib/utils"
+import { sendRequest, mapMealPlan } from "@/lib/utils"
 import { useRouter } from "next/navigation"
 
 // Helper function to format date as YYYY-MM-DD
@@ -87,30 +87,6 @@ export default function Dashboard() {
       handleDateSelect(0);
     }
   }, [dates, selectedDate, handleDateSelect]);
-
-  const loadMealRecipe = async (recipeId: string) => {
-    console.log("Loading recipe for: ", recipeId);
-
-    const data = await sendRequest<any>(`/api/recipe/${recipeId}`);
-    console.log(`Loaded recipe: ${recipeId}`, data);
-
-    return {
-      title: data.name,
-      image: data.link,
-      calories: 320,
-      protein: 15,
-    };
-  };
-
-  const mapMealPlan = async (mealPlan: any) => {
-    const meal = {
-      breakfast: await loadMealRecipe(mealPlan.breakfast),
-      lunch: await loadMealRecipe(mealPlan.lunch),
-      dinner: await loadMealRecipe(mealPlan.dinner),
-    }
-
-    return meal;
-  }
 
   const createMealPlan = async (selectedDate: string) => {
     console.log("Creating meal plan for: ", selectedDate);
@@ -232,7 +208,7 @@ export default function Dashboard() {
                       <div className="absolute bottom-4 left-4 right-4">
                         <h3 className="text-white font-semibold text-lg mb-1">{meal.title}</h3>
                         <p className="text-white/80 text-sm">
-                          {meal.calories} calories • {meal.protein}g protein
+                          {meal.nutrition.calories} calories • {meal.nutrition.protein}g protein
                         </p>
                       </div>
                     </div>
