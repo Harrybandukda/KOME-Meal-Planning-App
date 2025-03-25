@@ -16,7 +16,7 @@ A full-stack web application built with React, Node.js, Express, PostgreSQL, and
 ## 🚀 **Live Demo**
 You can check out the deployed version of our project by clicking the link below:
 
-[👉 **Live Project on OVH Server](https://kome.my/)
+[👉 **Live Project on OVH Server](https://kome.my/**)
 
 ---
 ## 🛠️ **Running the Project Locally**
@@ -28,8 +28,11 @@ cd Capstone-COMP3078-WebApp
 
 ### 2. Create a .env file
 In the root directory, create a .env file and add the following environment variables:
+
 NEXT_PUBLIC_ENV=development
+
 NEXT_PUBLIC_SERVER_URL=https://kome.my
+
 PORT=3000
 
 ### 3. Start the app using Docker Compose
@@ -51,20 +54,30 @@ Once the containers are running, open your browser and navigate to:
 ## 🧰 **Tech Stack**
 Here are the main technologies and tools we used to build and deploy this project:
 
-###🔹 Frontend
+### Frontend
+
 🔹React – Modern JavaScript library for building interactive user interfaces
+
 🔹Next.js – React framework for server-side rendering and routing
+
 🔹Tailwind CSS – Utility-first CSS framework for responsive and clean styling
 
-###🔹 Backend
+### Backend
 🔹Node.js – JavaScript runtime environment for server-side logic
+
 🔹Express.js – Fast, minimalist web framework for building RESTful APIs
+
 🔹Sequelize – ORM (Object-Relational Mapping) tool for working with SQL databases
+
 🔹PostgreSQL – Relational database for structured data storage
 
-###🔹 DevOps & Deployment
+### DevOps & Deployment
 🔹Docker – Containerization platform for consistent development and deployment environments
+
 🔹Docker Compose – Tool for managing multi-container applications
+
 🔹Nginx – Web server and reverse proxy for routing and performance
+
 🔹OVH Cloud – Cloud infrastructure used for deploying the live application
+
 🔹Let's Encrypt – Free SSL certificate authority for HTTPS security
