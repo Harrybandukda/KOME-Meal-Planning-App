@@ -21,6 +21,8 @@ You can check out the deployed version of our project by clicking the link below
 ---
 ## 🛠️ **Running the Project Locally**
 
+*To run the project on your local machine, make sure you have Docker and Docker Compose installed.
+
 ### 1. Clone the repository
 git clone 
 https://github.com/Harrybandukda/Capstone-COMP3078-WebApp
