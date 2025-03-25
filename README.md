@@ -37,7 +37,9 @@ PORT=3000
 ```
 
 ### 3. Start the app using Docker Compose
-```docker compose up```
+```
+docker compose up
+```
 
 This command will:
 
