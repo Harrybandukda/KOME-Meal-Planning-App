@@ -8,6 +8,7 @@ import Image from "next/image"
 import { Plus, RotateCcw, ArrowRight } from 'lucide-react'
 import { useRouter } from "next/navigation"
 import { AppContext } from "../app-provider"
+import { sendRequest } from "@/lib/utils"
 
 // Mock data structure ready for database integration
 const mockWeeks = [
@@ -18,7 +19,7 @@ const mockWeeks = [
   { id: 5, name: "Week 05" },
 ]
 
-const mockDays = [
+const weekdays = [
   { name: "Monday", short: "Mon" },
   { name: "Tuesday", short: "Tue" },
   { name: "Wednesday", short: "Wed", active: true },
@@ -134,11 +135,53 @@ const mockMeals = {
 
 export default function MealPlanner() {
   const [activeWeek, setActiveWeek] = useState(1)
-  const [activeDay, setActiveDay] = useState("Wednesday")
+  const [activeDay, setActiveDay] = useState(2)
+  const [mealPlans, setMealPlans] = useState<any>({})
+  const [currentPlan, setCurrentPlan] = useState<any>({})
   const [selectedMeal, setSelectedMeal] = useState("breakfast")
 
   const { isLoading, userId } = useContext(AppContext);
   const router = useRouter();
+  
+  const loadMealRecipe = async (recipeId: string) => {
+    const data = await sendRequest<any>(`/api/recipe/${recipeId}`);
+
+    return {
+      title: data.name,
+      image: data.link,
+      calories: 320,
+      protein: 15,
+    };
+  };
+
+  const mapMealPlan = async (mealPlan: any) => {
+    const meal = {
+      breakfast: await loadMealRecipe(mealPlan.breakfast),
+      lunch: await loadMealRecipe(mealPlan.lunch),
+      dinner: await loadMealRecipe(mealPlan.dinner),
+    }
+
+    return meal;
+  };
+
+  const loadMealPlans = async () => {
+    console.log("Planner loading current meal plans");
+
+    const meals = await sendRequest<[]>(`/api/meal_plan/user/${userId}`);
+
+    if (!meals || meals.length == 0) {
+      setMealPlans({});
+      console.error("Could not find any meal plans for user");
+      return;
+    }
+
+    const allPlans: Record<number, any> = {}; 
+    for (const meal of meals as Array<{ weekday: number }>) {
+      const mappedMeal = await mapMealPlan(meal);
+      allPlans[meal.weekday] = mappedMeal;
+    }
+    setMealPlans(allPlans);
+  };
 
   useEffect(() => {
     // Authentication check
@@ -147,7 +190,17 @@ export default function MealPlanner() {
       router.push("/login");
       return;
     }
-  }, [userId, isLoading, router]);
+
+    loadMealPlans();
+  }, [userId, isLoading, router, loadMealPlans]);
+
+  useEffect(() => {
+    if (mealPlans && mealPlans[activeDay]) {
+      setCurrentPlan(mealPlans[activeDay]);
+    } else {
+      setCurrentPlan({});
+    }
+  }, [activeDay]);
 
   return (
     <div className="min-h-screen bg-white font-sans">
@@ -189,12 +242,12 @@ export default function MealPlanner() {
               </button>
             </div>
             <div className="grid grid-cols-7 gap-4">
-              {mockDays.map((day) => (
+              {weekdays.map((day, id) => (
                 <button
                   key={day.name}
-                  onClick={() => setActiveDay(day.name)}
+                  onClick={() => setActiveDay(id)}
                   className={`p-2 text-center transition-colors ${
-                    activeDay === day.name ? "text-[#42B5E7] font-medium" : "text-gray-400"
+                    activeDay === id ? "text-[#42B5E7] font-medium" : "text-gray-400"
                   }`}
                 >
                   {day.name}
@@ -207,7 +260,7 @@ export default function MealPlanner() {
           <div className="grid grid-cols-4 gap-8">
             {/* Meal Cards */}
             <div className="col-span-3 flex gap-6">
-              {Object.entries(mockMeals).map(([type, meal]) => (
+              {Object.entries(currentPlan).map(([type, recipe]: [string, any]) => (
                 <div
                   key={type}
                   className={`flex-1 p-6 rounded-2xl transition-colors cursor-pointer ${
@@ -218,14 +271,14 @@ export default function MealPlanner() {
                   <div className="flex flex-col items-center">
                     <div className="relative w-[140px] h-[140px] mb-4">
                       <Image
-                        src={meal.image || "/placeholder.svg"}
-                        alt={meal.name}
+                        src={recipe.image || "/placeholder.svg"}
+                        alt={recipe.name}
                         fill
                         className="object-cover rounded-full"
                       />
                     </div>
                     <h3 className="font-medium text-lg capitalize mb-1">{type}</h3>
-                    <p className="text-sm text-gray-500">Need {meal.neededIngredients} ingredients</p>
+                    <p className="text-sm text-gray-500">Need {recipe.neededIngredients} ingredients</p>
                   </div>
                 </div>
               ))}
