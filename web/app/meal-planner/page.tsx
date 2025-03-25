@@ -8,7 +8,7 @@ import Image from "next/image"
 import { Plus, RotateCcw, ArrowRight } from 'lucide-react'
 import { useRouter } from "next/navigation"
 import { AppContext } from "../app-provider"
-import { sendRequest } from "@/lib/utils"
+import { sendRequest, mapMealPlan } from "@/lib/utils"
 
 // Mock data structure ready for database integration
 const mockWeeks = [
@@ -142,27 +142,6 @@ export default function MealPlanner() {
 
   const { isLoading, userId } = useContext(AppContext);
   const router = useRouter();
-  
-  const loadMealRecipe = async (recipeId: string) => {
-    const data = await sendRequest<any>(`/api/recipe/${recipeId}`);
-
-    return {
-      title: data.name,
-      image: data.link,
-      calories: 320,
-      protein: 15,
-    };
-  };
-
-  const mapMealPlan = async (mealPlan: any) => {
-    const meal = {
-      breakfast: await loadMealRecipe(mealPlan.breakfast),
-      lunch: await loadMealRecipe(mealPlan.lunch),
-      dinner: await loadMealRecipe(mealPlan.dinner),
-    }
-
-    return meal;
-  };
 
   const loadMealPlans = async () => {
     console.log("Planner loading current meal plans");
@@ -191,8 +170,10 @@ export default function MealPlanner() {
       return;
     }
 
-    loadMealPlans();
-  }, [userId, isLoading, router, loadMealPlans]);
+    if (userId) {
+      loadMealPlans();
+    }
+  }, [userId, isLoading, router]);
 
   useEffect(() => {
     if (mealPlans && mealPlans[activeDay]) {
