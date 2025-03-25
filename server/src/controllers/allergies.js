@@ -17,6 +17,17 @@ const allergiesController = {
             throw new Error("Error getting allergy:", err.message)
         }
     },
+    getUserAllergies: async (id) => {
+        try{
+            return await models.User.findByPk({
+                where: { id: id },
+                include: models.Allergies
+            })
+        } catch (err) {
+            console.log("Error getting user allergies:", err.message)
+            throw new Error("Error getting user allergies:", err.message)
+        }
+    },
     addAllergy: async (name) => {
         try {
             // get all allergies 

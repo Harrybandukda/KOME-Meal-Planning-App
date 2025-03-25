@@ -23,6 +23,16 @@ router.get('/:id', async (req, res) => {
     }
 })
 
+// Get allergies by userId
+router.get('/:id', async (req, res) => {
+    try{
+        const userAllergies = await allergiesController.getUserAllergies(req.params.id)
+        res.status(200).send(userAllergies)
+    } catch(err) {
+        res.status(500).json({ message: err.message });
+    }
+})
+
 // Create new allergy
 router.post('/create/:name', async (req, res) => {
     try {
