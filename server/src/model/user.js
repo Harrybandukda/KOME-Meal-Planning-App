@@ -8,5 +8,16 @@ module.exports = (sequelize) => {
         weight: DataTypes.FLOAT,
         gender: DataTypes.STRING,
         goal: DataTypes.STRING,
+    }, {
+        defaultScope: {
+          attributes: {
+            exclude: ['password']
+          }
+        },
+        scopes: {
+          withPassword: {
+            attributes: {}
+          }
+        }
     });
 };

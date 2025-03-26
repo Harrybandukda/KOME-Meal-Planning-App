@@ -21,7 +21,7 @@ const userController = {
 			throw Error("Username and password are required.");
 		}
 
-        const user = await models.User.findOne({ where: { email } });
+        const user = await models.User.scope('withPassword').findOne({ where: { email } });
 
         if (!user) {
             throw Error("Invalid username or password.");
