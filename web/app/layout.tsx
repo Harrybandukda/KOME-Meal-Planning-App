@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Kome",
+  title: "Kome Food App",
   description: "Discover your next favorite food meal in one click!",
 };
 
