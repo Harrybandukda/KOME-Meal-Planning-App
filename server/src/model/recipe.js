@@ -31,7 +31,6 @@ module.exports = (sequelize) => {
         type: DataTypes.STRING,
         allowNull: false
     },
-
     cookware: {
         type: DataTypes.STRING,
         allowNull: true,
@@ -40,8 +39,31 @@ module.exports = (sequelize) => {
             return (value) ? value.split(';') : [];
         },
         set(value) {
-            this.setDataValue('cookware', value.join(';'));
+            if (Array.isArray(value)) {
+                value = value.join(';');
+            }
+            this.setDataValue('cookware', value);
         }
-    }
+    },
+    calories: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+        defaultValue: 100
+    },
+    carbs: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+        defaultValue: 3
+    },
+    fat: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+        defaultValue: 2
+    },
+    protein: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+        defaultValue: 10
+    },
 
 })}

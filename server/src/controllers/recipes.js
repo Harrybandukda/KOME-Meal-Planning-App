@@ -1,7 +1,16 @@
 const { models } = require('../database');
 
 const recipeController = {
-    getRecipes: async () => {
+    getRecipes: async (query) => {
+        const category = query.category;
+        if (category) {
+            return await models.Recipe.findAll({
+                include: [{
+                    model: models.Categories,
+                    where: { name: category }
+                }]
+            });
+        }
         return await models.Recipe.findAll();
     },
     getRecipe: async (id) => {

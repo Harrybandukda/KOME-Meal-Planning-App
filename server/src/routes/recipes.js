@@ -4,7 +4,7 @@ const recipeController = require('../controllers/recipes');
 
 router.get('/', async (req, res) => {
     try {
-        const recipes = await recipeController.getRecipes();
+        const recipes = await recipeController.getRecipes(req.query);
 
         res.status(200).json(recipes);
     } catch (err) {
