@@ -1,5 +1,22 @@
+const DATABASE_VERSION = 1;
+
 async function populateDatabase(models) {
     try {
+        const lastMigration = await models.Migration.findByPk(1);
+        if (lastMigration) {
+            if ( lastMigration.version >= DATABASE_VERSION) {
+                console.log("Database already populated; skipping");
+                return;
+            } else {
+                lastMigration.version = DATABASE_VERSION;
+                console.log("Updating database to version ", DATABASE_VERSION);
+                await lastMigration.save();
+            }
+        } else {
+            await models.Migration.create({ version: DATABASE_VERSION });
+            console.log("Migration created");
+        }
+
         // Populate Categories
         const categories = await models.Categories.bulkCreate([
             { name: "African" },

@@ -9,6 +9,7 @@ const models = [
     require("./model/ingredient"),
     require("./model/meal_history"),
     require("./model/meal_plan"),
+    require("./model/migration"),
     require("./model/questionnaire"),
     require("./model/recipe"),
     require("./model/session"),

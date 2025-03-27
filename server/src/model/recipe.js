@@ -30,5 +30,18 @@ module.exports = (sequelize) => {
     instructions: {
         type: DataTypes.STRING,
         allowNull: false
+    },
+
+    cookware: {
+        type: DataTypes.STRING,
+        allowNull: true,
+        get () {
+            const value = this.getDataValue('cookware');
+            return (value) ? value.split(';') : [];
+        },
+        set(value) {
+            this.setDataValue('cookware', value.join(';'));
+        }
     }
+
 })}

@@ -5,9 +5,10 @@ const recipeController = {
         return await models.Recipe.findAll();
     },
     getRecipe: async (id) => {
-        console.log("ADASDASDAD");
-        console.log(id);
-        return await models.Recipe.findByPk(id);
+        const recipe = await models.Recipe.findByPk(id, {
+            include: [models.Ingredient, models.Categories]
+        });
+        return recipe;
     },
     getUserRecipes: async (userId) => {
         const user = await models.User.findOne({
