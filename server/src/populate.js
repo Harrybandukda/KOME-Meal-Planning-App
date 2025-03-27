@@ -52,7 +52,7 @@ async function populateDatabase(models) {
             { name: "Vegetarian" },
             { name: "Vietnamese" },
             { name: "Quick" }
-        ]);
+        ], { ignoreDuplicates: false });
 
         // Populate Dietary Restrictions 
         const dietRest = await models.DietaryRestrictions.bulkCreate([
@@ -67,7 +67,7 @@ async function populateDatabase(models) {
             { name: "Keto" },
             { name: "Paleo" },
             { name: "Low-Carb" }
-        ]);
+        ], { ignoreDuplicates: false });
 
         // Populate Allergies
         const allergies = await models.Allergies.bulkCreate([
@@ -182,7 +182,7 @@ async function populateDatabase(models) {
         ]);
 
         // Populate ingredients 
-        const ingredients = await models.Ingredients.bulkCreate([
+        const ingredients = await models.Ingredient.bulkCreate([
             { name: "Glutten Free Bread Crumbs" },
             { name: "Dairy Free Milk" },
             { name: "Ground Beef" },
@@ -247,155 +247,154 @@ async function populateDatabase(models) {
             { name: "Froxen Corn" },
             { name: "Corn Tortillas" },
             { name: "Dairy Free Cheese" }, // 63
-            { name: "" },
         ]);
 
         // Populate RecipeIngredients
         await models.RecipeIngredients.bulkCreate([
-            { RecipeId: recipes.id[0], IngredientsId: ingredients.id[0] },
-            { RecipeId: recipes.id[0], IngredientsId: ingredients.id[1] },
-            { RecipeId: recipes.id[0], IngredientsId: ingredients.id[2] },
-            { RecipeId: recipes.id[0], IngredientsId: ingredients.id[3] },
-            { RecipeId: recipes.id[0], IngredientsId: ingredients.id[4] },
-            { RecipeId: recipes.id[0], IngredientsId: ingredients.id[5] },
-            { RecipeId: recipes.id[0], IngredientsId: ingredients.id[6] },
-            { RecipeId: recipes.id[0], IngredientsId: ingredients.id[7] },
-            { RecipeId: recipes.id[0], IngredientsId: ingredients.id[8] },
-            { RecipeId: recipes.id[0], IngredientsId: ingredients.id[9] },
-            { RecipeId: recipes.id[0], IngredientsId: ingredients.id[10] },
+            { RecipeId: recipes[0].id, IngredientId: ingredients[0].id },
+            { RecipeId: recipes[0].id, IngredientId: ingredients[1].id },
+            { RecipeId: recipes[0].id, IngredientId: ingredients[2].id },
+            { RecipeId: recipes[0].id, IngredientId: ingredients[3].id },
+            { RecipeId: recipes[0].id, IngredientId: ingredients[4].id },
+            { RecipeId: recipes[0].id, IngredientId: ingredients[5].id },
+            { RecipeId: recipes[0].id, IngredientId: ingredients[6].id },
+            { RecipeId: recipes[0].id, IngredientId: ingredients[7].id },
+            { RecipeId: recipes[0].id, IngredientId: ingredients[8].id },
+            { RecipeId: recipes[0].id, IngredientId: ingredients[9].id },
+            { RecipeId: recipes[0].id, IngredientId: ingredients[10].id },
 
-            { RecipeId: recipes.id[1], IngredientsId: ingredients.id[11] },
-            { RecipeId: recipes.id[1], IngredientsId: ingredients.id[12] },
-            { RecipeId: recipes.id[1], IngredientsId: ingredients.id[13] },
-            { RecipeId: recipes.id[1], IngredientsId: ingredients.id[14] },
-            { RecipeId: recipes.id[1], IngredientsId: ingredients.id[15] },
-            { RecipeId: recipes.id[1], IngredientsId: ingredients.id[16] },
-            { RecipeId: recipes.id[1], IngredientsId: ingredients.id[17] },
-            { RecipeId: recipes.id[1], IngredientsId: ingredients.id[18] },
-            { RecipeId: recipes.id[1], IngredientsId: ingredients.id[19] },
-            { RecipeId: recipes.id[1], IngredientsId: ingredients.id[20] },
-            { RecipeId: recipes.id[1], IngredientsId: ingredients.id[21] },
-            { RecipeId: recipes.id[1], IngredientsId: ingredients.id[22] },
-            { RecipeId: recipes.id[1], IngredientsId: ingredients.id[23] },
-            { RecipeId: recipes.id[1], IngredientsId: ingredients.id[24] },
-            { RecipeId: recipes.id[1], IngredientsId: ingredients.id[25] },
+            { RecipeId: recipes[1].id, IngredientId: ingredients[11].id },
+            { RecipeId: recipes[1].id, IngredientId: ingredients[12].id },
+            { RecipeId: recipes[1].id, IngredientId: ingredients[13].id },
+            { RecipeId: recipes[1].id, IngredientId: ingredients[14].id },
+            { RecipeId: recipes[1].id, IngredientId: ingredients[15].id },
+            { RecipeId: recipes[1].id, IngredientId: ingredients[16].id },
+            { RecipeId: recipes[1].id, IngredientId: ingredients[17].id },
+            { RecipeId: recipes[1].id, IngredientId: ingredients[18].id },
+            { RecipeId: recipes[1].id, IngredientId: ingredients[19].id },
+            { RecipeId: recipes[1].id, IngredientId: ingredients[20].id },
+            { RecipeId: recipes[1].id, IngredientId: ingredients[21].id },
+            { RecipeId: recipes[1].id, IngredientId: ingredients[22].id },
+            { RecipeId: recipes[1].id, IngredientId: ingredients[23].id },
+            { RecipeId: recipes[1].id, IngredientId: ingredients[24].id },
+            { RecipeId: recipes[1].id, IngredientId: ingredients[25].id },
 
-            { RecipeId: recipes.id[2], IngredientsId: ingredients.id[6] },
-            { RecipeId: recipes.id[2], IngredientsId: ingredients.id[26] },
-            { RecipeId: recipes.id[2], IngredientsId: ingredients.id[27] },
-            { RecipeId: recipes.id[2], IngredientsId: ingredients.id[28] },
-            { RecipeId: recipes.id[2], IngredientsId: ingredients.id[29] },
-            { RecipeId: recipes.id[2], IngredientsId: ingredients.id[30] },
-            { RecipeId: recipes.id[2], IngredientsId: ingredients.id[31] },
-            { RecipeId: recipes.id[2], IngredientsId: ingredients.id[32] },
-            { RecipeId: recipes.id[2], IngredientsId: ingredients.id[33] },
+            { RecipeId: recipes[2].id, IngredientId: ingredients[6].id},
+            { RecipeId: recipes[2].id, IngredientId: ingredients[26].id },
+            { RecipeId: recipes[2].id, IngredientId: ingredients[27].id },
+            { RecipeId: recipes[2].id, IngredientId: ingredients[28].id },
+            { RecipeId: recipes[2].id, IngredientId: ingredients[29].id },
+            { RecipeId: recipes[2].id, IngredientId: ingredients[30].id },
+            { RecipeId: recipes[2].id, IngredientId: ingredients[31].id },
+            { RecipeId: recipes[2].id, IngredientId: ingredients[32].id },
+            { RecipeId: recipes[2].id, IngredientId: ingredients[33].id },
 
-            { RecipeId: recipes.id[3], IngredientsId: ingredients.id[6] },
-            { RecipeId: recipes.id[3], IngredientsId: ingredients.id[13] },
-            { RecipeId: recipes.id[3], IngredientsId: ingredients.id[14] },
-            { RecipeId: recipes.id[3], IngredientsId: ingredients.id[34] },
-            { RecipeId: recipes.id[3], IngredientsId: ingredients.id[35] },
-            { RecipeId: recipes.id[3], IngredientsId: ingredients.id[36] },
-            { RecipeId: recipes.id[3], IngredientsId: ingredients.id[37] },
-            { RecipeId: recipes.id[3], IngredientsId: ingredients.id[38] },
-            { RecipeId: recipes.id[3], IngredientsId: ingredients.id[39] },
-            { RecipeId: recipes.id[3], IngredientsId: ingredients.id[40] },
-            { RecipeId: recipes.id[3], IngredientsId: ingredients.id[41] },
-            
-            { RecipeId: recipes.id[4], IngredientsId: ingredients.id[1] },
-            { RecipeId: recipes.id[4], IngredientsId: ingredients.id[5] },
-            { RecipeId: recipes.id[4], IngredientsId: ingredients.id[6] },
-            { RecipeId: recipes.id[4], IngredientsId: ingredients.id[13] },
-            { RecipeId: recipes.id[4], IngredientsId: ingredients.id[14] },
-            { RecipeId: recipes.id[4], IngredientsId: ingredients.id[16] },
-            { RecipeId: recipes.id[4], IngredientsId: ingredients.id[35] },
-            { RecipeId: recipes.id[4], IngredientsId: ingredients.id[40] },
-            { RecipeId: recipes.id[4], IngredientsId: ingredients.id[42] },
-            { RecipeId: recipes.id[4], IngredientsId: ingredients.id[43] },
-            { RecipeId: recipes.id[4], IngredientsId: ingredients.id[44] },
-            { RecipeId: recipes.id[4], IngredientsId: ingredients.id[45] },
-            { RecipeId: recipes.id[4], IngredientsId: ingredients.id[46] },
-            { RecipeId: recipes.id[4], IngredientsId: ingredients.id[47] },
-            { RecipeId: recipes.id[4], IngredientsId: ingredients.id[48] },
-            { RecipeId: recipes.id[4], IngredientsId: ingredients.id[49] },
-            { RecipeId: recipes.id[4], IngredientsId: ingredients.id[50] },
-            
-            { RecipeId: recipes.id[5], IngredientsId: ingredients.id[4] },
-            { RecipeId: recipes.id[5], IngredientsId: ingredients.id[11] },
-            { RecipeId: recipes.id[5], IngredientsId: ingredients.id[13] },
-            { RecipeId: recipes.id[5], IngredientsId: ingredients.id[15] },
-            { RecipeId: recipes.id[5], IngredientsId: ingredients.id[17] },
-            { RecipeId: recipes.id[5], IngredientsId: ingredients.id[18] },
-            { RecipeId: recipes.id[5], IngredientsId: ingredients.id[35] },
-            { RecipeId: recipes.id[5], IngredientsId: ingredients.id[51] },
-            { RecipeId: recipes.id[5], IngredientsId: ingredients.id[52] },
-            { RecipeId: recipes.id[5], IngredientsId: ingredients.id[53] },
-            { RecipeId: recipes.id[5], IngredientsId: ingredients.id[54] },
-            { RecipeId: recipes.id[5], IngredientsId: ingredients.id[55] },
-            { RecipeId: recipes.id[5], IngredientsId: ingredients.id[56] },
-            { RecipeId: recipes.id[5], IngredientsId: ingredients.id[57] },
-            
-            { RecipeId: recipes.id[6], IngredientsId: ingredients.id[11] },
-            { RecipeId: recipes.id[5], IngredientsId: ingredients.id[13] },
-            { RecipeId: recipes.id[5], IngredientsId: ingredients.id[58] },
-            { RecipeId: recipes.id[5], IngredientsId: ingredients.id[59] },
-            { RecipeId: recipes.id[5], IngredientsId: ingredients.id[60] },
-            { RecipeId: recipes.id[5], IngredientsId: ingredients.id[61] },
-            { RecipeId: recipes.id[5], IngredientsId: ingredients.id[62] },
-            { RecipeId: recipes.id[5], IngredientsId: ingredients.id[63] },
+            { RecipeId: recipes[3].id, IngredientId: ingredients[6].id},
+            { RecipeId: recipes[3].id, IngredientId: ingredients[13].id },
+            { RecipeId: recipes[3].id, IngredientId: ingredients[14].id },
+            { RecipeId: recipes[3].id, IngredientId: ingredients[34].id },
+            { RecipeId: recipes[3].id, IngredientId: ingredients[35].id },
+            { RecipeId: recipes[3].id, IngredientId: ingredients[36].id },
+            { RecipeId: recipes[3].id, IngredientId: ingredients[37].id },
+            { RecipeId: recipes[3].id, IngredientId: ingredients[38].id },
+            { RecipeId: recipes[3].id, IngredientId: ingredients[39].id },
+            { RecipeId: recipes[3].id, IngredientId: ingredients[40].id },
+            { RecipeId: recipes[3].id, IngredientId: ingredients[41].id },
+        
+            { RecipeId: recipes[4].id, IngredientId: ingredients[1].id},
+            { RecipeId: recipes[4].id, IngredientId: ingredients[5].id},
+            { RecipeId: recipes[4].id, IngredientId: ingredients[6].id},
+            { RecipeId: recipes[4].id, IngredientId: ingredients[13].id },
+            { RecipeId: recipes[4].id, IngredientId: ingredients[14].id },
+            { RecipeId: recipes[4].id, IngredientId: ingredients[16].id },
+            { RecipeId: recipes[4].id, IngredientId: ingredients[35].id },
+            { RecipeId: recipes[4].id, IngredientId: ingredients[40].id },
+            { RecipeId: recipes[4].id, IngredientId: ingredients[42].id },
+            { RecipeId: recipes[4].id, IngredientId: ingredients[43].id },
+            { RecipeId: recipes[4].id, IngredientId: ingredients[44].id },
+            { RecipeId: recipes[4].id, IngredientId: ingredients[45].id },
+            { RecipeId: recipes[4].id, IngredientId: ingredients[46].id },
+            { RecipeId: recipes[4].id, IngredientId: ingredients[47].id },
+            { RecipeId: recipes[4].id, IngredientId: ingredients[48].id },
+            { RecipeId: recipes[4].id, IngredientId: ingredients[49].id },
+            { RecipeId: recipes[4].id, IngredientId: ingredients[50].id },
+        
+            { RecipeId: recipes[5].id, IngredientId: ingredients[4].id},
+            { RecipeId: recipes[5].id, IngredientId: ingredients[11].id },
+            { RecipeId: recipes[5].id, IngredientId: ingredients[13].id },
+            { RecipeId: recipes[5].id, IngredientId: ingredients[15].id },
+            { RecipeId: recipes[5].id, IngredientId: ingredients[17].id },
+            { RecipeId: recipes[5].id, IngredientId: ingredients[18].id },
+            { RecipeId: recipes[5].id, IngredientId: ingredients[35].id },
+            { RecipeId: recipes[5].id, IngredientId: ingredients[51].id },
+            { RecipeId: recipes[5].id, IngredientId: ingredients[52].id },
+            { RecipeId: recipes[5].id, IngredientId: ingredients[53].id },
+            { RecipeId: recipes[5].id, IngredientId: ingredients[54].id },
+            { RecipeId: recipes[5].id, IngredientId: ingredients[55].id },
+            { RecipeId: recipes[5].id, IngredientId: ingredients[56].id },
+            { RecipeId: recipes[5].id, IngredientId: ingredients[57].id },
+        
+            { RecipeId: recipes[6].id, IngredientId: ingredients[11].id },
+            { RecipeId: recipes[6].id, IngredientId: ingredients[13].id },
+            { RecipeId: recipes[6].id, IngredientId: ingredients[58].id },
+            { RecipeId: recipes[6].id, IngredientId: ingredients[59].id },
+            { RecipeId: recipes[6].id, IngredientId: ingredients[60].id },
+            { RecipeId: recipes[6].id, IngredientId: ingredients[61].id },
+            { RecipeId: recipes[6].id, IngredientId: ingredients[62].id },
+            { RecipeId: recipes[6].id, IngredientId: ingredients[63].id },
         ])
 
         // Populate RecipeCategories
         await models.RecipeCategories.bulkCreate([
-            { RecipeId: recipes.id[0], CategoriesId: categories.id[13] }, 
-            { RecipeId: recipes.id[0], CategoriesId: categories.id[16] },
-            { RecipeId: recipes.id[0], CategoriesId: categories.id[20] },
-            { RecipeId: recipes.id[0], CategoriesId: categories.id[24] },
-            { RecipeId: recipes.id[0], CategoriesId: categories.id[25] },
-            { RecipeId: recipes.id[0], CategoriesId: categories.id[27] },
+            { RecipeId: recipes[0].id, CategoryId: categories[13].id }, 
+            { RecipeId: recipes[0].id, CategoryId: categories[16].id },
+            { RecipeId: recipes[0].id, CategoryId: categories[20].id },
+            { RecipeId: recipes[0].id, CategoryId: categories[24].id },
+            { RecipeId: recipes[0].id, CategoryId: categories[25].id },
+            { RecipeId: recipes[0].id, CategoryId: categories[27].id },
 
-            { RecipeId: recipes.id[1], CategoriesId: categories.id[13] },
-            { RecipeId: recipes.id[1], CategoriesId: categories.id[16] },
-            { RecipeId: recipes.id[1], CategoriesId: categories.id[20] },
-            { RecipeId: recipes.id[1], CategoriesId: categories.id[25] },
-            { RecipeId: recipes.id[1], CategoriesId: categories.id[35] },
-            { RecipeId: recipes.id[1], CategoriesId: categories.id[40] },
-            { RecipeId: recipes.id[1], CategoriesId: categories.id[46] },
-            { RecipeId: recipes.id[1], CategoriesId: categories.id[47] },
+            { RecipeId: recipes[1].id, CategoryId: categories[13].id },
+            { RecipeId: recipes[1].id, CategoryId: categories[16].id },
+            { RecipeId: recipes[1].id, CategoryId: categories[20].id },
+            { RecipeId: recipes[1].id, CategoryId: categories[25].id },
+            { RecipeId: recipes[1].id, CategoryId: categories[35].id },
+            { RecipeId: recipes[1].id, CategoryId: categories[40].id },
+            { RecipeId: recipes[1].id, CategoryId: categories[46].id },
+            { RecipeId: recipes[1].id, CategoryId: categories[47].id },
 
-            { RecipeId: recipes.id[2], CategoriesId: categories.id[10] },
-            { RecipeId: recipes.id[2], CategoriesId: categories.id[13] },
-            { RecipeId: recipes.id[2], CategoriesId: categories.id[20] },
-            { RecipeId: recipes.id[2], CategoriesId: categories.id[25] },
-            { RecipeId: recipes.id[2], CategoriesId: categories.id[40] },
+            { RecipeId: recipes[2].id, CategoryId: categories[10].id },
+            { RecipeId: recipes[2].id, CategoryId: categories[13].id },
+            { RecipeId: recipes[2].id, CategoryId: categories[20].id },
+            { RecipeId: recipes[2].id, CategoryId: categories[25].id },
+            { RecipeId: recipes[2].id, CategoryId: categories[40].id },
 
-            { RecipeId: recipes.id[3], CategoriesId: categories.id[13] },
-            { RecipeId: recipes.id[3], CategoriesId: categories.id[16] },
-            { RecipeId: recipes.id[3], CategoriesId: categories.id[20] },
-            { RecipeId: recipes.id[3], CategoriesId: categories.id[25] },
-            { RecipeId: recipes.id[3], CategoriesId: categories.id[46] },
-            { RecipeId: recipes.id[3], CategoriesId: categories.id[47] },
-            { RecipeId: recipes.id[3], CategoriesId: categories.id[48] },
+            { RecipeId: recipes[3].id, CategoryId: categories[13].id },
+            { RecipeId: recipes[3].id, CategoryId: categories[16].id },
+            { RecipeId: recipes[3].id, CategoryId: categories[20].id },
+            { RecipeId: recipes[3].id, CategoryId: categories[25].id },
+            { RecipeId: recipes[3].id, CategoryId: categories[46].id },
+            { RecipeId: recipes[3].id, CategoryId: categories[47].id },
+            { RecipeId: recipes[3].id, CategoryId: categories[48].id },
             
-            { RecipeId: recipes.id[4], CategoriesId: categories.id[13] },
-            { RecipeId: recipes.id[4], CategoriesId: categories.id[16] },
-            { RecipeId: recipes.id[4], CategoriesId: categories.id[20] },
-            { RecipeId: recipes.id[4], CategoriesId: categories.id[25] },
-            { RecipeId: recipes.id[4], CategoriesId: categories.id[40] },
+            { RecipeId: recipes[4].id, CategoryId: categories[13].id },
+            { RecipeId: recipes[4].id, CategoryId: categories[16].id },
+            { RecipeId: recipes[4].id, CategoryId: categories[20].id },
+            { RecipeId: recipes[4].id, CategoryId: categories[25].id },
+            { RecipeId: recipes[4].id, CategoryId: categories[40].id },
 
-            { RecipeId: recipes.id[5], CategoriesId: categories.id[13] },
-            { RecipeId: recipes.id[5], CategoriesId: categories.id[16] },
-            { RecipeId: recipes.id[5], CategoriesId: categories.id[23] },
-            { RecipeId: recipes.id[5], CategoriesId: categories.id[24] },
-            { RecipeId: recipes.id[5], CategoriesId: categories.id[25] },
-            { RecipeId: recipes.id[5], CategoriesId: categories.id[35] },
-            { RecipeId: recipes.id[5], CategoriesId: categories.id[40] },
+            { RecipeId: recipes[5].id, CategoryId: categories[13].id },
+            { RecipeId: recipes[5].id, CategoryId: categories[16].id },
+            { RecipeId: recipes[5].id, CategoryId: categories[23].id },
+            { RecipeId: recipes[5].id, CategoryId: categories[24].id },
+            { RecipeId: recipes[5].id, CategoryId: categories[25].id },
+            { RecipeId: recipes[5].id, CategoryId: categories[35].id },
+            { RecipeId: recipes[5].id, CategoryId: categories[40].id },
 
-            { RecipeId: recipes.id[6], CategoriesId: categories.id[12] },
-            { RecipeId: recipes.id[6], CategoriesId: categories.id[13] },
-            { RecipeId: recipes.id[6], CategoriesId: categories.id[16] },
-            { RecipeId: recipes.id[6], CategoriesId: categories.id[20] },
-            { RecipeId: recipes.id[6], CategoriesId: categories.id[35] },
+            { RecipeId: recipes[6].id, CategoryId: categories[12].id },
+            { RecipeId: recipes[6].id, CategoryId: categories[13].id },
+            { RecipeId: recipes[6].id, CategoryId: categories[16].id },
+            { RecipeId: recipes[6].id, CategoryId: categories[20].id },
+            { RecipeId: recipes[6].id, CategoryId: categories[35].id },
         ])
 
         // Populate Users 
@@ -427,31 +426,31 @@ async function populateDatabase(models) {
         ])
 
         // Populate UserAllergies
-        await users.id[0].addAllergy(allergies.id[0])
-        await users.id[0].addAllergy(allergies.id[4])
-        await users.id[1].addAllergy(allergies.id[2])
-        await users.id[2].addAllergy(allergies.id[2])
-        await users.id[2].addAllergy(allergies.id[3])
-        await users.id[2].addAllergy(allergies.id[4])
-        await users.id[2].addAllergy(allergies.id[5])
-        await users.id[2].addAllergy(allergies.id[6])
+        await users[0].addAllergy(allergies[0].id)
+        await users[0].addAllergy(allergies[4].id)
+        await users[1].addAllergy(allergies[2].id)
+        await users[2].addAllergy(allergies[2].id)
+        await users[2].addAllergy(allergies[3].id)
+        await users[2].addAllergy(allergies[4].id)
+        await users[2].addAllergy(allergies[5].id)
+        await users[2].addAllergy(allergies[6].id)
 
         // Populate UserDietaryRestrictions
-        await users.id[1].addDietaryRestriction(dietRest.id[0])
-        await users.id[2].addDietaryRestriction(dietRest.id[2])
-        await users.id[2].addDietaryRestriction(dietRest.id[3])
-        await users.id[2].addDietaryRestriction(dietRest.id[4])
+        await users[1].addDietaryRestriction(dietRest[0].id)
+        await users[2].addDietaryRestriction(dietRest[2].id)
+        await users[2].addDietaryRestriction(dietRest[3].id)
+        await users[2].addDietaryRestriction(dietRest[4].id)
 
         // Populate MealHistory
         await models.MealHistory.bulkCreate([
-            { userId: users.id[0], recipeId: recipes.id[4] },
-            { userId: users.id[0], recipeId: recipes.id[1] },
-            { userId: users.id[0], recipeId: recipes.id[0] },
-            { userId: users.id[1], recipeId: recipes.id[5] },
-            { userId: users.id[1], recipeId: recipes.id[2] },
-            { userId: users.id[2], recipeId: recipes.id[3] },
-            { userId: users.id[2], recipeId: recipes.id[5] },
-            { userId: users.id[2], recipeId: recipes.id[6] },
+            { userId: users[0].id, recipeId: recipes[4].id },
+            { userId: users[0].id, recipeId: recipes[1].id },
+            { userId: users[0].id, recipeId: recipes[0].id },
+            { userId: users[1].id, recipeId: recipes[5].id },
+            { userId: users[1].id, recipeId: recipes[2].id },
+            { userId: users[2].id, recipeId: recipes[3].id },
+            { userId: users[2].id, recipeId: recipes[5].id },
+            { userId: users[2].id, recipeId: recipes[6].id },
         ])
 
         console.log('Database populated successfully');
