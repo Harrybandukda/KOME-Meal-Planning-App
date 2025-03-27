@@ -87,7 +87,7 @@ export default function MealPlanner() {
         <div className="p-8">
           {/* Header */}
           <div className="flex justify-between items-center mb-8">
-            <h1 className="text-[28px] font-bold tracking-tight">YOUR PERSONALIZED MEAL PLAN</h1>
+            <h1 className="font-everbright text-[34px] font-bold tracking-tight">YOUR PERSONALIZED MEAL PLAN</h1>
             <div className="flex items-center gap-4">
               <Button variant="outline" className="h-9 gap-2 rounded-full border-[#42B5E7] text-[#42B5E7] text-sm font-medium hover:bg-[#42B5E7] hover:text-white">
                 <Plus className="w-4 h-4" />

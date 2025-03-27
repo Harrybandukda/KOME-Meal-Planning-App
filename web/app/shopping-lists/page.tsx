@@ -205,7 +205,7 @@ export default function ShoppingListPage() {
                 <span className="font-medium">List</span>
               </button>
 
-              <h2 className="text-xl font-semibold mb-6 text-gray-800">My Shopping List</h2>
+              <h2 className="font-everbright text-2xl font-semibold mb-6 text-gray-800">My Shopping List</h2>
 
               <div className="space-y-2">
                 {stores.map((store) => (

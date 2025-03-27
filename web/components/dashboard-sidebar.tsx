@@ -49,7 +49,7 @@ export function DashboardSidebar() {
         <Link href="/">
           <div className="flex items-center gap-2 cursor-pointer">
             <Image src="/assets/logo.png" alt="Kome Logo" width={40} height={40} className="w-10 h-10" />
-            <span className="font-bold text-xl">KOME</span>
+            <span className="font-everbright font-bold text-xl">KOME</span>
           </div>
         </Link>
       </div>

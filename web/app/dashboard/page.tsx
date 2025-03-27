@@ -163,7 +163,7 @@ export default function Dashboard() {
         {/* Dashboard Content */}
         <div className="p-8">
           <div className="mb-8">
-            <h2 className="text-2xl font-bold mb-6">YOUR PERSONALIZED MEAL PLAN</h2>
+            <h2 className="font-everbright text-3xl font-bold mb-8">YOUR PERSONALIZED MEAL PLAN</h2>
 
             {/* Date Selector */}
             <div className="flex gap-4 mb-8 overflow-x-auto pb-2">

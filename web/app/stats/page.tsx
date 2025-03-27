@@ -223,9 +223,9 @@ export default function StatsPage() {
             <div className="text-right">
               <div className="flex items-center justify-end gap-2 text-gray-600 mb-1">
                 <Sun className="w-5 h-5 text-[#42B5E7]" />
-                <span>Good Morning</span>
+                <span>Good Day!</span>
               </div>
-              <h2 className="text-2xl font-bold tracking-wide">{userData.firstName.toUpperCase()} {userData.lastName.toUpperCase()}</h2>
+              <h2 className="font-everbright text-2xl font-bold tracking-wide">{userData.firstName.toUpperCase()} {userData.lastName.toUpperCase()}</h2>
             </div>
           </div>
 
@@ -266,7 +266,7 @@ export default function StatsPage() {
           <div className="mb-6">
             <div className="flex justify-between items-center mb-4">
               <div>
-                <h2 className="text-2xl font-bold mb-1">MEAL QUESTIONNAIRES</h2>
+                <h2 className="font-everbright text-2xl font-bold mb-1">MEAL QUESTIONNAIRES</h2>
                 <p className="text-gray-600">Help us improve meal plan by answering new questionnaires weekly</p>
               </div>
               <div className="flex items-center gap-4">
