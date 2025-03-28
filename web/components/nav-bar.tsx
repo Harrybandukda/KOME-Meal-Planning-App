@@ -28,11 +28,11 @@ export function NavBar() {
         <Link href="/top-recipes" className="text-gray-700 font-medium">
           TOP RECIPES
         </Link>
-
-        {/* Temporary development link */}
-        <Link href="/onboarding" className="text-gray-700 font-medium">
-          ONBOARDING
-        </Link>
+      {/* 
+              Temporary development link
+              <Link href="/onboarding" className="text-gray-700 font-medium">
+                ONBOARDING
+              </Link> */}
         
       </div>
 
