@@ -41,34 +41,36 @@ export function sendRequest<T>(url: string, method: string = 'GET', body: any = 
     });
 }
 
-export async function loadMealRecipe (recipeId: string) {
-  const data = await sendRequest<any>(`/api/recipe/${recipeId}`);
-
+export function mapRecipe (apiResponse: any) {
   return {
-    title: data.name,
-    image: data.link,
-    description: data.description,
-    cookware: data.cookware,
-    ingredients: [
-      { name: "Salmon Fillet", amount: "6", unit: "oz" },
-      { name: "Olive Oil", amount: "1", unit: "tbsp" },
-      { name: "Lemon", amount: "1/2", unit: "" },
-      { name: "Garlic", amount: "2", unit: "cloves" },
-    ],
-    categories: data.categories.map((category: any) => category.name),
-    instructions: data.instructions.split('. ').map((text: string, step: number) => {
+    title: apiResponse.name,
+    image: apiResponse.link,
+    description: apiResponse.description,
+    cookware: apiResponse.cookware,
+    servings: apiResponse.servings,
+    ingredients: apiResponse.Ingredients ? apiResponse.Ingredients.map((ingredient: any) => {
+      return { name: ingredient.name, amount: ingredient.RecipeIngredients.amount, unit: ingredient.unit };
+    }) : [],
+    categories: apiResponse.Categories.map((category: any) => category.name),
+    instructions: apiResponse.instructions.split('. ').map((text: string, step: number) => {
       return { step, text }; 
     }),
     nutrition: {
-      calories: data.calories,
-      carbs: data.carbs,
-      fat: data.fat,
-      protein: data.protein,
+      calories: apiResponse.calories,
+      carbs: apiResponse.carbs,
+      fat: apiResponse.fat,
+      protein: apiResponse.protein,
       fiber: 5,
       sodium: 210,
       cholesterol: 0,
     }
   };
+}
+
+export async function loadMealRecipe (recipeId: string) {
+  const data = await sendRequest<any>(`/api/recipe/${recipeId}`);
+
+  return mapRecipe(data);
 };
 
 export async function mapMealPlan (mealPlan: any) {

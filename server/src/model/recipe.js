@@ -45,6 +45,11 @@ module.exports = (sequelize) => {
             this.setDataValue('cookware', value);
         }
     },
+    servings: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        defaultValue: 1
+    },
     calories: {
         type: DataTypes.INTEGER,
         allowNull: true,

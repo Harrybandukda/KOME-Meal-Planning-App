@@ -11,7 +11,9 @@ const recipeController = {
                 }]
             });
         }
-        return await models.Recipe.findAll();
+        return await models.Recipe.findAll({
+            include: [models.Categories]
+        });
     },
     getRecipe: async (id) => {
         const recipe = await models.Recipe.findByPk(id, {

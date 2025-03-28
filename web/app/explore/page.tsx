@@ -1,122 +1,15 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 "use client"
 
-import { useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import { DashboardSidebar } from "@/components/dashboard-sidebar"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import Image from "next/image"
 import { Search, Bell, ChevronDown, ArrowRight, Heart, Clock } from "lucide-react"
-
-// Mock user data (would come from database)
-const userData = {
-  id: 1,
-  firstName: "Harry",
-  lastName: "bandukda",
-  email: "harry@example.com",
-  avatar: "/placeholder.svg?height=40&width=40",
-  preferences: {
-    language: "English",
-  },
-}
-
-// Mock categories
-const categories = ["Appetizer", "Breakfast & Brunch", "Lunch", "Dinner", "Dessert", "Drinks", "Side Dish", "Healthy"]
-
-// Mock recipes data
-const recipes = [
-  {
-    id: 1,
-    title: "Baked Kale Chips with Avocados Sauce",
-    image: "/assets/placeholder.jpg",
-    cookingTime: "20 Mins",
-    calories: "430 Kcal",
-    rating: 4.8,
-    reviews: 231,
-    author: {
-      name: "Clarke Griffin",
-      avatar: "/placeholder.svg?height=40&width=40",
-    },
-    isTrending: false,
-    isLiked: true,
-  },
-  {
-    id: 2,
-    title: "Pizza Salad",
-    image: "/assets/placeholder.jpg",
-    cookingTime: "10 Mins",
-    calories: "240 Kcal",
-    rating: 4.8,
-    reviews: 420,
-    author: {
-      name: "Franklin Clinton",
-      avatar: "/placeholder.svg?height=40&width=40",
-    },
-    isTrending: true,
-    isLiked: false,
-  },
-  {
-    id: 3,
-    title: "3 Cup Chicken Noodles Stir-Fry",
-    image: "/assets/placeholder.jpg",
-    cookingTime: "20 Mins",
-    calories: "390 Kcal",
-    rating: 4.7,
-    reviews: 69,
-    author: {
-      name: "Jimmy McGill",
-      avatar: "/placeholder.svg?height=40&width=40",
-    },
-    isTrending: false,
-    isLiked: false,
-  },
-  {
-    id: 4,
-    title: "Baked Kale Chips with Avocados Sauce",
-    image: "/assets/placeholder.jpg",
-    cookingTime: "20 Mins",
-    calories: "430 Kcal",
-    rating: 4.8,
-    reviews: 231,
-    author: {
-      name: "Clarke Griffin",
-      avatar: "/placeholder.svg?height=40&width=40",
-    },
-    isTrending: false,
-    isLiked: true,
-  },
-  {
-    id: 5,
-    title: "Grilled Salmon with Lemon Butter",
-    image: "/assets/placeholder.jpg",
-    cookingTime: "25 Mins",
-    calories: "320 Kcal",
-    rating: 4.9,
-    reviews: 156,
-    author: {
-      name: "Jimmy McGill",
-      avatar: "/placeholder.svg?height=40&width=40",
-    },
-    isTrending: false,
-    isLiked: false,
-  },
-  {
-    id: 6,
-    title: "Vegetable Stir Fry with Tofu",
-    image: "/assets/placeholder.jpg",
-    cookingTime: "15 Mins",
-    calories: "280 Kcal",
-    rating: 4.6,
-    reviews: 98,
-    author: {
-      name: "Franklin Clinton",
-      avatar: "/placeholder.svg?height=40&width=40",
-    },
-    isTrending: false,
-    isLiked: false,
-  },
-]
+import { AppContext } from "../app-provider"
+import { mapRecipe, sendRequest } from "@/lib/utils"
 
 // Sort options
 const sortOptions = [
@@ -126,11 +19,43 @@ const sortOptions = [
 ]
 
 export default function ExplorePage() {
-  const [activeCategory, setActiveCategory] = useState("Lunch")
+  const [loadedCategory, setLoadedCategory] = useState("")
+  const [activeCategory, setActiveCategory] = useState("View All")
+  const [recipes, setRecipes] = useState<any>([])
+  const [categories, setCategories] = useState<any>([])
   const [likedRecipes, setLikedRecipes] = useState<number[]>(
-    recipes.filter((recipe) => recipe.isLiked).map((recipe) => recipe.id),
+    recipes.filter((recipe: any) => recipe.isLiked).map((recipe: any) => recipe.id),
   )
   const [sortBy, setSortBy] = useState("popular")
+  const { isLoading, userId, userName } = useContext(AppContext);
+
+  const initialLoad = async () => {
+    if (!isLoading) {
+      if (loadedCategory !== activeCategory) {
+        setLoadedCategory(activeCategory);
+        const categoryFilter = activeCategory === "View All" ? "" : `?category=${activeCategory}`;
+        const allRecipes = await sendRequest<[]>(`/api/recipe${categoryFilter}`);
+
+        if (activeCategory === "View All") {
+          const uniqueCategories = new Set<string>();
+          allRecipes.forEach((recipe: any) => recipe.Categories.forEach((category: any) => uniqueCategories.add(category.name)));
+          const cats = Array.from(uniqueCategories).slice(0, 11);
+          cats.push("View All");
+          setCategories(cats);
+        }
+
+        setRecipes(allRecipes.map((recipe: any) => mapRecipe(recipe)));
+      }
+    }
+    if (userId && likedRecipes.length === 0) {
+      const userRecipes = await sendRequest<[]>(`/api/recipe/user/${userId}`);
+      setLikedRecipes(userRecipes.map((recipe: any) => recipe.id));
+    }
+  };
+
+  useEffect(() => {
+    initialLoad();
+  }, [userId, isLoading, activeCategory]);
 
   const toggleLike = (recipeId: number) => {
     setLikedRecipes((prev) => (prev.includes(recipeId) ? prev.filter((id) => id !== recipeId) : [...prev, recipeId]))
@@ -165,15 +90,15 @@ export default function ExplorePage() {
               </button>
               <div className="flex items-center gap-2">
                 <Image
-                  src={userData.avatar || "/placeholder.svg"}
-                  alt={`${userData.firstName} ${userData.lastName}`}
+                  src={"/placeholder.svg"}
+                  alt={`${userName}`}
                   width={40}
                   height={40}
                   className="rounded-full"
                 />
                 <div className="flex items-center gap-2">
                   <span className="font-medium">
-                    {userData.firstName} {userData.lastName}
+                    {userName}
                   </span>
                   <ChevronDown className="w-4 h-4 text-gray-400" />
                 </div>
@@ -184,7 +109,7 @@ export default function ExplorePage() {
           {/* Categories */}
           <div className="flex items-center justify-between mb-8">
             <div className="flex gap-3 overflow-x-auto pb-2 no-scrollbar">
-              {categories.map((category) => (
+              {categories.map((category: string) => (
                 <Button
                   key={category}
                   variant={activeCategory === category ? "default" : "outline"}
@@ -196,15 +121,9 @@ export default function ExplorePage() {
                   onClick={() => setActiveCategory(category)}
                 >
                   {category}
+                  {category === "View All" && <ArrowRight className="w-4 h-4 ml-2" />}
                 </Button>
               ))}
-              <Button
-                variant="outline"
-                className="rounded-full px-6 text-gray-600 hover:text-gray-900 whitespace-nowrap"
-              >
-                View All
-                <ArrowRight className="w-4 h-4 ml-2" />
-              </Button>
             </div>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -225,7 +144,7 @@ export default function ExplorePage() {
 
           {/* Recipe Grid */}
           <div className="grid grid-cols-3 gap-6">
-            {recipes.map((recipe) => (
+            {recipes.map((recipe: any) => (
               <div key={recipe.id} className="group">
                 {/* Recipe Image */}
                 <div className="relative aspect-[4/3] rounded-2xl overflow-hidden mb-4">
@@ -258,7 +177,7 @@ export default function ExplorePage() {
                 <div className="flex items-center gap-6 mb-4">
                   <div className="flex items-center gap-2 text-gray-600">
                     <Clock className="w-4 h-4" />
-                    <span>{recipe.cookingTime}</span>
+                    <span>{recipe.instructions.length * 15}</span>
                   </div>
                   <div className="flex items-center gap-2 text-gray-600">
                     <span className="text-gray-400">🔥</span>
@@ -266,21 +185,16 @@ export default function ExplorePage() {
                   </div>
                   <div className="flex items-center gap-1">
                     <span className="text-orange-500">★</span>
-                    <span className="text-gray-900">{recipe.rating}</span>
-                    <span className="text-gray-500">({recipe.reviews})</span>
+                    <span className="text-gray-900">4.8</span>
+                    <span className="text-gray-500">231</span>
                   </div>
                 </div>
 
-                {/* Author */}
+                {/* Ingredients */}
                 <div className="flex items-center gap-2">
-                  <Image
-                    src={recipe.author.avatar || "/placeholder.svg"}
-                    alt={recipe.author.name}
-                    width={24}
-                    height={24}
-                    className="rounded-full"
-                  />
-                  <span className="text-gray-600">{recipe.author.name}</span>
+                {recipe.categories.map((category: string, index: number) => (
+                  <span key={index} className="text-gray-600">{category}</span>
+                ))}
                 </div>
               </div>
             ))}

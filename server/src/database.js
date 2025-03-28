@@ -1,4 +1,4 @@
-const { Sequelize } = require('sequelize');
+const { Sequelize, DataTypes } = require('sequelize');
 const populateDatabase = require('./populate')
 const sequelize = new Sequelize(process.env.DATABASE_URL);
 
@@ -34,8 +34,16 @@ Categories.belongsToMany(Questionnaire, { through: 'QuestionCategory' });
 Recipe.belongsToMany(Categories, { through: 'RecipeCategories' });
 Categories.belongsToMany(Recipe, { through: 'RecipeCategories' });
 
-Recipe.belongsToMany(Ingredient, { through: 'RecipeIngredients' });
-Ingredient.belongsToMany(Recipe, { through: 'RecipeIngredients' });
+const RecipeIngredients = sequelize.define(
+    'RecipeIngredients',
+    {
+      amount: DataTypes.DOUBLE,
+    },
+    { timestamps: false },
+  );
+
+Recipe.belongsToMany(Ingredient, { through: RecipeIngredients });
+Ingredient.belongsToMany(Recipe, { through: RecipeIngredients });
 
 User.belongsToMany(Recipe, { through: 'UserRecipes' });
 Recipe.belongsToMany(User, { through: 'UserRecipes' });
