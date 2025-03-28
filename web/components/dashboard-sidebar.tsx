@@ -7,10 +7,7 @@ import {
   Compass,
   Calendar,
   ShoppingCart,
-  Scan,
-  BookOpen,
   BarChart2,
-  BookMarked,
   Info,
   Settings,
   RotateCcw,
@@ -26,18 +23,15 @@ export function DashboardSidebar() {
     { name: "Explore", icon: Compass, href: "/explore" },
     { name: "Meal Planner", icon: Calendar, href: "/meal-planner" },
     { name: "Shopping Lists", icon: ShoppingCart, href: "/shopping-lists" },
-    { name: "Scan Fridge", icon: Scan, href: "/scan-fridge" },
   ]
 
   const extraItems = [
-    { name: "Recipes", icon: BookOpen, href: "/recipes" },
     { name: "Stats", icon: BarChart2, href: "/stats" },
-    { name: "Resources", icon: BookMarked, href: "/resources" },
     { name: "About", icon: Info, href: "/about" },
   ]
 
   const accountItems = [
-    { name: "Account Settings", icon: Settings, href: "/settings" },
+    { name: "Account Settings", icon: Settings, href: "/profile" },
     { name: "Reset Week", icon: RotateCcw, href: "#reset-week" },
     { name: "Support", icon: HelpCircle, href: "/support" },
     { name: "Logout", icon: LogOut, href: "/logout" },

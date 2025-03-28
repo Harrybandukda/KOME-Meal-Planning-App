@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import { DashboardSidebar } from "@/components/dashboard-sidebar"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -8,6 +8,8 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import Image from "next/image"
 import { Search, Bell, ChevronDown, Sun, Target, X } from 'lucide-react'
+import { AppContext } from "../app-provider"
+import { sendRequest } from "@/lib/utils"
 
 // Mock diet types
 const dietTypes = ["Favourite Diets", "Meat", "Keto", "Low Carb", "Vegetarian"]
@@ -73,19 +75,6 @@ const initialQuestionnaires = [
   },
 ]
 
-// Mock user data (would come from database)
-const userData = {
-  id: 1,
-  firstName: "Harry",
-  lastName: "bandukda",
-  email: "harry@example.com",
-  avatar: "/placeholder.svg?height=40&width=40",
-  preferences: {
-    language: "English",
-    diet: "Favourite Diets"
-  }
-}
-
 // Sort options
 const sortOptions = [
   { value: "name", label: "Name" },
@@ -100,6 +89,32 @@ export default function StatsPage() {
   const [isGoalDialogOpen, setIsGoalDialogOpen] = useState(false)
   const [newGoals, setNewGoals] = useState<Record<number, number>>({})
   const [sortBy, setSortBy] = useState("name")
+  const { isLoading, userId, userName } = useContext(AppContext);
+
+  useEffect(() => {
+    if (!isLoading && userId) {
+      // Fetch user data
+      sendRequest(`/api/user/${userId}`)
+        .then((data: any) => {
+          const startDate = new Date(data.createdAt);
+          const duration = Math.floor((new Date().getTime() - startDate.getTime()) / (1000 * 60 * 60 * 12)) + 1;
+          const progress = ( duration * 10 ) % 100;
+          setStatsData(statsData.map((stat) => {
+            if (stat.title === "Health Score") {
+              stat.progress = (progress < 30) ? progress + 50 : 89;
+              stat.value = `${stat.progress}%`;
+            } else if (stat.title === "Monthly Saving") {
+              stat.progress = progress;
+              stat.value = `$${progress * 15}`;
+            } else if (stat.title === "Ingredients Saving") {
+              stat.progress = progress;
+              stat.value = `${progress * 0.1}lb`;
+            }
+            return stat;
+          }));
+        });
+    }
+  }, [userId, isLoading]);
 
   // Handle goal change
   const handleGoalChange = (index: number, value: string) => {
@@ -188,14 +203,14 @@ export default function StatsPage() {
               </button>
               <div className="flex items-center gap-2">
                 <Image
-                  src={userData.avatar || "/placeholder.svg"}
-                  alt={`${userData.firstName} ${userData.lastName}`}
+                  src={"/placeholder.svg"}
+                  alt={`${userName}`}
                   width={40}
                   height={40}
                   className="rounded-full"
                 />
                 <div className="flex items-center gap-2">
-                  <span className="font-medium">{userData.firstName} {userData.lastName}</span>
+                  <span className="font-medium">{userName}</span>
                   <ChevronDown className="w-4 h-4 text-gray-400" />
                 </div>
               </div>
@@ -225,7 +240,7 @@ export default function StatsPage() {
                 <Sun className="w-5 h-5 text-[#42B5E7]" />
                 <span>Good Day!</span>
               </div>
-              <h2 className="font-everbright text-2xl font-bold tracking-wide">{userData.firstName.toUpperCase()} {userData.lastName.toUpperCase()}</h2>
+              <h2 className="font-everbright text-2xl font-bold tracking-wide">{userName.toUpperCase()}</h2>
             </div>
           </div>
 
