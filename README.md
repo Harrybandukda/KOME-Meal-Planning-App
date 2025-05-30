@@ -14,8 +14,8 @@ You can check out the deployed version of our project by clicking the link below
 
 ### 1. Clone the repository
 git clone 
-https://github.com/Harrybandukda/Capstone-COMP3078-WebApp
-cd Capstone-COMP3078-WebApp
+https://github.com/Harrybandukda/KOME-Meal-Planning-App
+cd KOME-Meal-Planning-App
 
 ### 2. Create a .env file
 In the root directory, create a .env file and add the following environment variables:
