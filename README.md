@@ -2,17 +2,6 @@
 
 A full-stack web application built with React, Node.js, Express, PostgreSQL, and Sequelize. Designed to help users make smart and healthy food choices based on their preferences and dietary needs.
 
-## 👥 **Project Team Members**
-
-| **Name**          | **Student Number** |
-|-------------------|--------------------|
-| Anna Shibanova    | 101399925          |
-| Mo Harry Bandukda | 101451857          |
-| Nicole Milmine    | 101462077          |
-| Oleg Chystieiev   | 101447469          |
-| Shirin Ali        | 101385244          |
----
-
 ## 🚀 **Live Demo**
 You can check out the deployed version of our project by clicking the link below:
 
